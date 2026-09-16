@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M2)
+
+- M2 implementerat: realtids-multiplayer via Socket.IO. Delat protokoll i `shared/src/protocol.ts` (`move`/`world_snapshot`/`player_joined`/`player_moved`/`player_left`).
+- Server: socket-autentisering återanvänder samma session-cookie som REST-API:t (verifierar JWT, slår upp karaktär). In-memory register över anslutna spelare (`Map<accountId, RemotePlayerState>`), broadcastar join/move/leave till övriga klienter.
+- Klient: renderar andra spelares karaktärer och namnbrickor (nu även för den egna spelaren — "namn visas ovanför karaktären" från M0-kravet). Rörelse broadcastas throttlat (~10 Hz) medan spelaren rör sig.
+- Verifierat med ett tvåspelar-testskript mot den riktiga servern: anslutning, world-snapshot (inkl. redan anslutna spelare), join-, move- och leave-events bekräftade end-to-end.
+
 ## 2026-09-16 (bugfix)
 
 - Fixade en renderingsbugg där marken bara målades i nedre högra delen av skärmen (tile-uträkningen tog inte hänsyn till att spelaren ritas i skärmens mitt). Bekräftat åtgärdat av PO.

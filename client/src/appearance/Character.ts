@@ -42,3 +42,19 @@ export function drawCharacter(
 
   ctx.restore();
 }
+
+export function drawNameTag(
+  ctx: CanvasRenderingContext2D,
+  screenX: number,
+  screenY: number,
+  name: string
+): void {
+  ctx.save();
+  ctx.font = "12px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+  ctx.fillText(name, screenX + 1, screenY - 34);
+  ctx.fillStyle = "#f0ece0";
+  ctx.fillText(name, screenX, screenY - 35);
+  ctx.restore();
+}
