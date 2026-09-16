@@ -12,10 +12,10 @@ export function drawGround(
   cameraX: number,
   cameraY: number
 ): void {
-  const startCol = Math.floor(cameraX / TILE_SIZE) - 1;
-  const startRow = Math.floor(cameraY / TILE_SIZE) - 1;
-  const cols = Math.ceil(width / TILE_SIZE) + 2;
-  const rows = Math.ceil(height / TILE_SIZE) + 2;
+  const startCol = Math.floor((cameraX - width / 2) / TILE_SIZE) - 1;
+  const startRow = Math.floor((cameraY - height / 2) / TILE_SIZE) - 1;
+  const cols = Math.ceil(width / TILE_SIZE) + 3;
+  const rows = Math.ceil(height / TILE_SIZE) + 3;
 
   const baseR = 58;
   const baseG = 92;
