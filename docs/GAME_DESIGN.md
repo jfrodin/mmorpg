@@ -1,0 +1,61 @@
+# GAME_DESIGN.md — Aktuell gameplay-design
+
+Status: v0.1-planering. Uppdateras löpande i takt med implementation.
+
+## Kärnkänsla
+
+bekant → avvikande → mystiskt → okänt
+
+Spelet ska initialt kunna misstas för att vara helt normalt: svensk nutid, mobiltelefoner, bilar, vanliga jobb. Ingen fantasy-signalering.
+
+## Spelaridentitet
+
+Spelare börjar som vanliga invånare, inte hjältar/klasser/magiker. Identitet växer fram ur vad spelaren faktiskt gör (fiskar mycket → blir skicklig fiskare, osv).
+
+## Sessionslängd
+
+Spelet ska fungera i 2–10 minuters sessioner (öppna → göra något meningsfullt → få progression/information → stänga) men också stödja längre sessioner. Detta styr UX-beslut som chat-scope, hur snabbt man kommer in i spelet, och att progression sker i små, tydliga steg.
+
+## Progression: skill-based
+
+Inga traditionella klasser. Skills (exakt lista beslutas efter hand, kandidater):
+Exploration, Fishing, Foraging, Hunting, Survival, Crafting, Cooking, Trading, Investigation, Knowledge, Combat.
+
+**v0.1 implementerar endast: Foraging** (plocka bär/svamp/växter i skogen). Övriga skills läggs till i senare versioner.
+
+## Exploration-filosofi
+
+Ingen quest-marker-design. Information ges via dialog, miljö, föremålsbeskrivningar, rykten — spelaren väljer själv att agera på ledtrådar eller inte. Se CONTENT_GUIDE.md för konkreta riktlinjer.
+
+## Multiplayer-scope (v0.1)
+
+- Flera spelare i samma world-instans, ser varandras position/appearance i realtid
+- **Chat: lokal/närhetsbaserad**, inte global — förstärker känslan av en delad, fysisk värld snarare än en Discord-kanal. Global chat kan läggas till senare om behov uppstår.
+- Persistent karaktär (position, namn, appearance, inventory, skills) i databasen
+- Disconnect/reconnect ska fungera utan att spelaren tappar state
+
+## Combat & död
+
+- **Permadeath: uteslutet helt.** Passar inte tonen eller sessionslängden.
+- **Combat-modell: inte beslutad, inte implementerad i v0.1.** Hot i spelet hanteras initialt genom undvikande/miljö snarare än strid. Designas separat när/om behovet uppstår.
+- **PvP: inte implementerat i v0.1.** Möjligen aktuellt senare (oklart, ej beslutat) — arkitekturen ska inte aktivt stänga dörren, men inget PvP-specifikt byggs i förväg.
+
+## Monetization
+
+Inte relevant för projektet (privat spel för en mindre grupp). Ingen design eller kod ägnas åt detta.
+
+## v0.1 vertical slice — scope
+
+Se ROADMAP.md för milestones. Sammanfattat innehåll:
+
+- Litet stadsområde + väg ut + litet skogsområde + del av sjöstrand
+- Karaktärsskapande (parametrisk appearance), rörelse, persistent position
+- Multiplayer: position-sync, synliga spelare, lokal chat
+- 2–4 NPC:er, 3–5 interagerbara föremål, enkel inventory
+- Skill: Foraging
+- Dag/natt-cykel, enkel väder (klart ↔ dimma)
+- Ett litet mysterium (se WORLD.md, PROPOSAL tills godkänt)
+
+## Uttryckligen INTE i v0.1
+
+Stor värld, avancerad combat, guilds, raids, hundratals items, avancerad crafting, housing, auction house, vehicles, stora quest chains, avancerad character creator, full ekonomi, komplett lore, mobilapp.
