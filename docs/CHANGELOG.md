@@ -1,5 +1,10 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M3)
+
+- M3 implementerat: karaktärsskapande har nu en färgväljare (jacka/byxor/hy/hår) med live-förhandsvisning på en liten canvas, istället för att alla karaktärer fick samma standardutseende.
+- Även fixat under samma spårning: canvas z-index-krock som gjorde inloggningsformuläret oklickbart i en andra browser-session, tydligare/svenska felmeddelanden vid registrering/inloggning, samt en kant-pil som pekar mot spelare utanför synhåll (ingen orientering fanns annars i den öppna, landmärkeslösa världen).
+
 ## 2026-09-16 (M2)
 
 - M2 implementerat: realtids-multiplayer via Socket.IO. Delat protokoll i `shared/src/protocol.ts` (`move`/`world_snapshot`/`player_joined`/`player_moved`/`player_left`).
