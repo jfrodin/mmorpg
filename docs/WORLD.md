@@ -10,33 +10,25 @@ Detta dokument innehåller ENDAST etablerad lore (CANON) och tydligt märkta fö
 - Det finns något märkligt i världen. Den yttersta sanningen är INTE fastställd och ska inte improviseras fram (§10/§31).
 - Övernaturliga fenomen, om de förekommer, ska vara sällsynta och betydelsefulla — inte generisk fantasy (goblins/orcher/mana/etc. är uteslutet).
 
-## PROPOSAL — väntar på PO-godkännande
-
-Följande används just nu som **arbetsnamn/arbetsantaganden i implementationen** (för att kunna bygga något konkret) men är INTE canon förrän PO godkänner dem. Enligt CLAUDE.md/§31 får inget av detta fastställas permanent utan explicit beslut.
-
-### Geografikoncept: "Ö-staden"
+### Geografikoncept (godkänt av PO 2026-09-16)
 
 Staden ligger delvis på en halvö/liten ö ut i sjön, förbunden med fastlandet via en bro. Fiske är en central del av vardagen, hamnen är stadens naturliga centrum. Fler öar i sjön (obebodda eller glesbefolkade) fungerar som naturliga, tidiga explorationsmål.
 
-*Rekommenderat av Claude eftersom det gör sjön till en daglig, synlig del av stadslivet och ger explorationsvärde nära hemmabasen — inte formellt godkänt av PO ännu.*
-
-### Namnförslag (ej godkända)
-
-- **Sjön:** "Björnsjön" — vardagligt, trovärdigt sjönamn utan att kopiera Storsjön
-- **Staden:** "Kvarnviken" — plausibelt sammansatt ortnamn (kvarn + vik), knyter an till hamn/vatten-temat
-- **Spelets titel:** ej föreslaget ännu — bör beslutas efter att geografin är godkänd, så namnet kan växa ur platsen snarare än tvärtom
-
-### Mysterium: "Ljusen ute på ön"
+### Mysterium (koncept godkänt av PO 2026-09-16)
 
 Nattetid syns ibland ett svagt ljus på en av de obebodda öarna i sjön — inte varje natt, bara vid vissa förhållanden (tid + väder). En NPC vid hamnen nämner det som skrönor. Inget UI-quest-tracking; spelare upptäcker mönstret själva och jämför iakttagelser.
 
 Uppfyller kraven i §25: börjar vardagligt, går att missa, kräver observation, involverar miljön, går att diskutera spelare emellan, förklarar INTE det stora mysteriet, ingen combat.
 
-**Detta implementeras inte förrän PO uttryckligen godkänt konceptet** (§25 kräver diskussion innan implementation).
+### Visuell riktning (godkänt av PO 2026-09-16)
 
-### Visuell riktning
+"Nordisk vektor" som bas (rena geometriska former, mjuka gradienter, tydliga silhuetter, begränsad palett) med procedurell noise-textur på terräng/vegetation för organisk känsla. Se ARCHITECTURE.md för teknisk implementation. Detta är startpunkten för iteration, inte ett i sten huggen slutgiltig stil — kan förfinas löpande.
 
-"Nordisk vektor" som bas (rena geometriska former, mjuka gradienter, tydliga silhuetter, begränsad palett) med procedurell noise-textur på terräng/vegetation för organisk känsla. Se ARCHITECTURE.md för teknisk implementation. Slutlig grafisk stil kräver PO-godkännande enligt §31 — detta är startpunkten för iteration, inte ett låst beslut.
+## Namn — medvetet olösta
+
+PO vill att ortnamn, sjönamn och spelets titel **växer fram organiskt** snarare än fastställs i förväg. Inga namnförslag ska betraktas som ens preliminärt beslutade.
+
+Tills namn finns används generiska platshållare i kod och content: `staden`, `sjön`, `ön`/`öarna`, `hamnen`. Dessa är tekniska placeholders, inte canon-namn — döp aldrig om dem till ett påhittat namn utan att PO uttryckligen fört in det. Namn kan väckas till liv senare av vad som helst i processen (en NPC som råkar nämna det, ett kartfynd, ett beslut PO tar rakt av) — när det händer dokumenteras det här under CANON och koden uppdateras i en egen commit.
 
 ## IMPLEMENTED
 
