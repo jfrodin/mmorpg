@@ -32,4 +32,6 @@ Tills namn finns används generiska platshållare i kod och content: `staden`, `
 
 ## IMPLEMENTED
 
-*(Tomt — inget innehåll implementerat ännu.)*
+- **v0.1 startområde** (klient-sida tile-karta, `client/src/world/starting-area.ts`, 120×90 rutor): ett litet torg (kullersten) med fem enkla byggnadsplaceringar runt om, en väg österut ut ur torget, ett skogsområde västerut (strödda träd, ~16% densitet), samt en bit sjöstrand söderut (sand → vatten). Kollision på byggnader/träd/vatten.
+- Detta är EN LITEN DEL av den godkända Ö-stads-geografin ovan — inte hela konceptet. Halvön/ön, bron och de omgivande öarna i sjön är ännu INTE byggda; det är kvar för senare världsutbyggnad utöver v0.1-scopet.
+- Nya karaktärer spawnar på torget (`SPAWN_POINT` i `shared/src/world.ts`).

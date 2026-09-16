@@ -1,0 +1,36 @@
+import type { RegionDefinition } from "./types";
+
+// PROPOSAL geography (Ö-staden), see docs/WORLD.md. Place names are
+// deliberately unresolved (docs/WORLD.md) — this file only encodes shape.
+export const startingArea: RegionDefinition = {
+  id: "starting-area",
+  widthTiles: 120,
+  heightTiles: 90,
+  layers: [
+    { kind: "fill", data: { type: "grass", x0: 0, y0: 0, x1: 120, y1: 90 } },
+
+    // Forest, west edge.
+    { kind: "fill", data: { type: "forest_floor", x0: 0, y0: 0, x1: 30, y1: 90 } },
+    {
+      kind: "scatter",
+      data: { type: "tree", x0: 0, y0: 0, x1: 30, y1: 90, density: 0.16, seed: 7 },
+    },
+
+    // Town square.
+    { kind: "fill", data: { type: "cobble", x0: 34, y0: 34, x1: 58, y1: 52 } },
+
+    // Buildings bordering the square.
+    { kind: "fill", data: { type: "building", x0: 36, y0: 27, x1: 42, y1: 33 } },
+    { kind: "fill", data: { type: "building", x0: 50, y0: 27, x1: 56, y1: 33 } },
+    { kind: "fill", data: { type: "building", x0: 28, y0: 36, x1: 33, y1: 44 } },
+    { kind: "fill", data: { type: "building", x0: 59, y0: 36, x1: 64, y1: 44 } },
+    { kind: "fill", data: { type: "building", x0: 40, y0: 53, x1: 48, y1: 58 } },
+
+    // Road out of town, east.
+    { kind: "fill", data: { type: "path", x0: 58, y0: 46, x1: 120, y1: 50 } },
+
+    // Lake shore, south.
+    { kind: "fill", data: { type: "sand", x0: 15, y0: 60, x1: 95, y1: 68 } },
+    { kind: "fill", data: { type: "water", x0: 10, y0: 68, x1: 100, y1: 90 } },
+  ],
+};

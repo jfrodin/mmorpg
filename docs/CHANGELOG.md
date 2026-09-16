@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M4)
+
+- M4 implementerat: ersatte den oändliga procedurella gräsytan med en riktig tile-karta (`client/src/world/starting-area.ts`) — litet torg (kullersten) med fem byggnader runt om, väg österut, skogsområde västerut med strödda träd, sjöstrand (sand+vatten) söderut.
+- Kollision tillagd (byggnader/träd/vatten blockerar, axel-separerad så spelaren glider längs väggar istället för att fastna).
+- Nya karaktärer spawnar nu på torget (`SPAWN_POINT`, delad mellan klient och server via `shared/src/world.ts`) istället för (0,0).
+- Dokumenterat i WORLD.md: detta är en liten del av den godkända Ö-stads-geografin, inte hela den — halvön/bron/öarna är kvar för senare.
+
 ## 2026-09-16 (M3)
 
 - M3 implementerat: karaktärsskapande har nu en färgväljare (jacka/byxor/hy/hår) med live-förhandsvisning på en liten canvas, istället för att alla karaktärer fick samma standardutseende.

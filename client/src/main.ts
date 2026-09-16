@@ -1,6 +1,7 @@
 import type { RemotePlayerState } from "shared";
 import { getMoveVector } from "./input/Keyboard";
-import { drawGround } from "./render/Ground";
+import { drawWorld } from "./render/World";
+import { isWalkableWorld } from "./world/tilemap";
 import { drawCharacter, drawNameTag } from "./appearance/Character";
 import { drawOffscreenIndicator } from "./render/OffscreenIndicator";
 import { runAuthFlow } from "./ui/AuthOverlay";
@@ -79,8 +80,10 @@ async function main(): Promise<void> {
 
     const move = getMoveVector();
     if (move.x !== 0 || move.y !== 0) {
-      player.x += move.x * MOVE_SPEED * dt;
-      player.y += move.y * MOVE_SPEED * dt;
+      const nextX = player.x + move.x * MOVE_SPEED * dt;
+      const nextY = player.y + move.y * MOVE_SPEED * dt;
+      if (isWalkableWorld(nextX, player.y)) player.x = nextX;
+      if (isWalkableWorld(player.x, nextY)) player.y = nextY;
       player.facing = move;
       dirtySinceLastSave = true;
 
@@ -91,7 +94,7 @@ async function main(): Promise<void> {
     }
 
     ctx.clearRect(0, 0, viewWidth, viewHeight);
-    drawGround(ctx, viewWidth, viewHeight, player.x, player.y);
+    drawWorld(ctx, viewWidth, viewHeight, player.x, player.y);
 
     for (const remote of remotePlayers.values()) {
       const dx = remote.x - player.x;

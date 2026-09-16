@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { eq } from "drizzle-orm";
 import type { AppearanceDescriptor } from "shared";
+import { SPAWN_POINT } from "shared";
 import { db } from "../db/client";
 import { characters } from "../db/schema";
 import { requireAuth, type AuthedRequest } from "../auth/session";
@@ -59,8 +60,8 @@ characterRouter.post("/", async (req: AuthedRequest, res) => {
     id,
     accountId: req.accountId!,
     name,
-    x: 0,
-    y: 0,
+    x: SPAWN_POINT.x,
+    y: SPAWN_POINT.y,
     appearance,
   });
 
