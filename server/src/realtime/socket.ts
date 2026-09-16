@@ -14,6 +14,7 @@ import { RESOURCE_NODES, FORAGING_XP_PER_HARVEST, INTERACT_RANGE } from "shared"
 import { db } from "../db/client";
 import { characters, inventoryItems, characterSkills } from "../db/schema";
 import type { SessionPayload } from "../auth/session";
+import { getWorldClockState, startWorldClock } from "./worldClock";
 
 async function addInventoryItem(characterId: string, itemId: string, amount: number): Promise<number> {
   const [row] = await db
@@ -70,6 +71,8 @@ export function setupRealtime(httpServer: HttpServer): void {
     }
   );
 
+  startWorldClock(io);
+
   io.use(async (socket, next) => {
     try {
       const cookieHeader = socket.handshake.headers.cookie;
@@ -112,6 +115,7 @@ export function setupRealtime(httpServer: HttpServer): void {
     socket.emit("world_snapshot", {
       players: Array.from(players.values()).filter((p) => p.accountId !== accountId),
       depletedNodes: Array.from(depletedNodes.keys()),
+      ...getWorldClockState(),
     });
     socket.broadcast.emit("player_joined", { player: state });
 

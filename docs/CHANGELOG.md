@@ -1,5 +1,11 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M8)
+
+- M8 implementerat: server-auktoritativ dygnscykel (20 min/varv) och väder (clear/fog, växlar var 3-8:e minut). Alla klienter delar samma tid/väder — servern skickar bara en referenspunkt, klienten räknar tid lokalt för mjuk animation.
+- Ljus-overlay mörknar/ljusnar canvasen genom dygnet. Dimma har en faktisk spelmässig effekt, inte bara visuell: siktavståndet för andra spelare begränsas (`FOG_VISIBILITY_RADIUS`), de visas som kant-pilar istället för synliga karaktärer utanför den radien.
+- Verifierat: `world_snapshot` innehåller `dayStartedAt`/`dayLengthMs`/`weather` korrekt vid anslutning.
+
 ## 2026-09-16 (M7)
 
 - M7 implementerat: Foraging-skill + inventory, helt server-auktoritativt. Sex resursnoder i skogen (blåbär/kantareller/lingon, `shared/src/resources.ts`), plockbara med **E** inom räckhåll.

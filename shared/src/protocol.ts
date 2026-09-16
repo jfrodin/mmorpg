@@ -27,6 +27,8 @@ export type HarvestResult =
   | { ok: true; itemId: string; quantity: number; xp: number; totalXp: number }
   | { ok: false; error: string };
 
+export type Weather = "clear" | "fog";
+
 export interface ClientToServerEvents {
   move: (payload: { x: number; y: number; facing: Vector2 }) => void;
   chat: (payload: { text: string }) => void;
@@ -34,11 +36,18 @@ export interface ClientToServerEvents {
 }
 
 export interface ServerToClientEvents {
-  world_snapshot: (payload: { players: RemotePlayerState[]; depletedNodes: string[] }) => void;
+  world_snapshot: (payload: {
+    players: RemotePlayerState[];
+    depletedNodes: string[];
+    dayStartedAt: number;
+    dayLengthMs: number;
+    weather: Weather;
+  }) => void;
   player_joined: (payload: { player: RemotePlayerState }) => void;
   player_moved: (payload: { accountId: string; x: number; y: number; facing: Vector2 }) => void;
   player_left: (payload: { accountId: string }) => void;
   chat_message: (payload: ChatMessage) => void;
   node_depleted: (payload: { nodeId: string }) => void;
   node_respawned: (payload: { nodeId: string }) => void;
+  weather_changed: (payload: { weather: Weather }) => void;
 }

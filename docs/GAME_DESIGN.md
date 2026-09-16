@@ -46,6 +46,14 @@ Ingen quest-marker-design. Information ges via dialog, miljö, föremålsbeskriv
 
 Inte relevant för projektet (privat spel för en mindre grupp). Ingen design eller kod ägnas åt detta.
 
+## Tid och väder
+
+Servern är enda auktoritet för dygnscykel och väder — alla spelare upplever samma tid/väder samtidigt (delad värld, §16/§18).
+
+- **Dygnscykel:** 20 minuter per fullt varv (`DAY_LENGTH_MS`), stiliserad (en topp/en dal, inte en realistisk 24-timmarskurva). Servern skickar bara en referenspunkt (`dayStartedAt` + `dayLengthMs`) vid anslutning — klienten räknar ut aktuell tid lokalt varje frame för mjuk animation utan konstant nätverkstrafik.
+- **Väder:** växlar slumpmässigt mellan `clear` och `fog` var 3:e–8:e minut (`weather_changed`-event, broadcastat direkt vid ändring, inte bara periodiskt).
+- **Dimma är inte bara kosmetisk:** den sänker faktiskt siktavståndet för andra spelare (`FOG_VISIBILITY_RADIUS`) — spelare utanför den radien visas som kant-pilar istället för synliga karaktärer, även om de tekniskt skulle rymmas inom skärmen. Matchar §18-kravet att väder ska påverka spelbarheten, inte bara se ut på ett visst sätt.
+
 ## v0.1 vertical slice — scope
 
 Se ROADMAP.md för milestones. Sammanfattat innehåll:

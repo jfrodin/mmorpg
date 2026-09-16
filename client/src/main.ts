@@ -1,8 +1,9 @@
-import type { RemotePlayerState } from "shared";
+import type { RemotePlayerState, Weather } from "shared";
 import { RESOURCE_NODES, INTERACT_RANGE } from "shared";
 import { getMoveVector } from "./input/Keyboard";
 import { drawWorld } from "./render/World";
 import { drawResourceNode } from "./render/ResourceNode";
+import { drawDayNightOverlay, drawFogOverlay } from "./render/DayNight";
 import { isWalkableWorld } from "./world/tilemap";
 import { drawCharacter, drawNameTag, drawInteractPrompt } from "./appearance/Character";
 import { drawOffscreenIndicator } from "./render/OffscreenIndicator";
@@ -37,6 +38,7 @@ resize();
 const MOVE_SPEED = 160;
 const POSITION_SAVE_INTERVAL_MS = 3000;
 const MOVE_BROADCAST_INTERVAL_MS = 100;
+const FOG_VISIBILITY_RADIUS = 320;
 
 async function main(): Promise<void> {
   const character = await runAuthFlow();
@@ -81,6 +83,18 @@ async function main(): Promise<void> {
   });
   socket.on("node_depleted", ({ nodeId }) => depletedNodes.add(nodeId));
   socket.on("node_respawned", ({ nodeId }) => depletedNodes.delete(nodeId));
+
+  let dayStartedAt = Date.now();
+  let dayLengthMs = 20 * 60 * 1000;
+  let weather: Weather = "clear";
+  socket.on("world_snapshot", (snapshot) => {
+    dayStartedAt = snapshot.dayStartedAt;
+    dayLengthMs = snapshot.dayLengthMs;
+    weather = snapshot.weather;
+  });
+  socket.on("weather_changed", ({ weather: w }) => {
+    weather = w;
+  });
 
   const npcLineIndex = new Map<string, number>();
   let nearest: { type: "npc" | "node"; id: string } | null = null;
@@ -185,8 +199,11 @@ async function main(): Promise<void> {
       const screenX = viewWidth / 2 + dx;
       const screenY = viewHeight / 2 + dy;
 
-      const onScreen =
+      const withinScreenBounds =
         screenX > -20 && screenX < viewWidth + 20 && screenY > -20 && screenY < viewHeight + 20;
+      const withinFogVisibility =
+        weather !== "fog" || Math.hypot(dx, dy) <= FOG_VISIBILITY_RADIUS;
+      const onScreen = withinScreenBounds && withinFogVisibility;
 
       if (onScreen) {
         drawCharacter(ctx, screenX, screenY, remote.facing, remote.appearance);
@@ -198,6 +215,12 @@ async function main(): Promise<void> {
 
     drawCharacter(ctx, viewWidth / 2, viewHeight / 2, player.facing, character.appearance);
     drawNameTag(ctx, viewWidth / 2, viewHeight / 2, character.name);
+
+    if (weather === "fog") {
+      drawFogOverlay(ctx, viewWidth, viewHeight);
+    }
+    const timeOfDay = ((Date.now() - dayStartedAt) % dayLengthMs) / dayLengthMs;
+    drawDayNightOverlay(ctx, viewWidth, viewHeight, timeOfDay);
 
     requestAnimationFrame(tick);
   }
