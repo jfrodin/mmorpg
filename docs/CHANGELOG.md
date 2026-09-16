@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M10 — v0.1 vertical slice klar)
+
+- M10 implementerat: ljud helt genererat via Web Audio API (`client/src/audio/SoundEngine.ts`) — inga ljudfiler. Fotsteg (varierad brusbaserad), UI-ljud vid chattmeddelande/dialog/skörd, och en tyst genererad vind-ambience som startar vid första användarinteraktion (krävs av webbläsarnas autoplay-policy).
+- Balans/konsekvens-fix: dimmans siktbegränsning gäller nu även NPC:er och resursnoder, inte bara andra spelare — annars kunde man se en NPC 400 enheter bort i dimma men inte en spelare på samma avstånd.
+- Full regressionskörning (multiplayer, chat, foraging) bekräftad grön efter alla M8–M10-ändringar.
+- **v0.1 vertical slice är därmed komplett** — hela ursprungsscopet i GAME_DESIGN.md (M0–M10) implementerat, testat och pushat.
+
 ## 2026-09-16 (M9 + världsutbyggnad)
 
 - M9 implementerat: mysteriet "Ljusen ute på ön" (redan CANON-godkänt koncept i WORLD.md). Kartan utökad (90→110 rutor hög) med en liten obebodd ö ute på sjön (ingen bro — avsiktligt oåtkomlig till fots) plus en mindre rent visuell holme.

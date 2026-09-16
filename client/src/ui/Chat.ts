@@ -1,5 +1,6 @@
 import type { Socket } from "socket.io-client";
 import type { ClientToServerEvents, ServerToClientEvents } from "shared";
+import { soundEngine } from "../audio/SoundEngine";
 
 const MAX_LOG_MESSAGES = 8;
 const MESSAGE_LIFETIME_MS = 12000;
@@ -55,7 +56,10 @@ export function initChat(
     if (e.key === "Enter") {
       e.preventDefault();
       const text = input.value.trim();
-      if (text) socket.emit("chat", { text });
+      if (text) {
+        socket.emit("chat", { text });
+        soundEngine.playChatBlip();
+      }
       input.value = "";
       input.blur();
       inputBar.hidden = true;

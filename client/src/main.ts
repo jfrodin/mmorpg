@@ -15,6 +15,10 @@ import { initInventoryPanel, applyHarvestResult } from "./ui/Inventory";
 import { savePosition, getInventory } from "./net/api";
 import { connectSocket } from "./net/socket";
 import { NPCS } from "./world/npcs";
+import { soundEngine } from "./audio/SoundEngine";
+
+window.addEventListener("keydown", () => soundEngine.unlock(), { once: true });
+window.addEventListener("pointerdown", () => soundEngine.unlock(), { once: true });
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
@@ -40,6 +44,7 @@ const MOVE_SPEED = 160;
 const POSITION_SAVE_INTERVAL_MS = 3000;
 const MOVE_BROADCAST_INTERVAL_MS = 100;
 const FOG_VISIBILITY_RADIUS = 320;
+const FOOTSTEP_INTERVAL_MS = 320;
 
 async function main(): Promise<void> {
   const character = await runAuthFlow();
@@ -110,6 +115,7 @@ async function main(): Promise<void> {
       const index = npcLineIndex.get(npc.id) ?? 0;
       showDialog(npc.name, npc.lines[index % npc.lines.length]);
       npcLineIndex.set(npc.id, index + 1);
+      soundEngine.playTalk();
     } else {
       const nodeId = nearest.id;
       if (depletedNodes.has(nodeId)) return;
@@ -119,6 +125,7 @@ async function main(): Promise<void> {
           return;
         }
         applyHarvestResult(result.itemId, result.quantity, result.totalXp);
+        soundEngine.playHarvest();
       });
     }
   });
@@ -131,6 +138,7 @@ async function main(): Promise<void> {
   }, POSITION_SAVE_INTERVAL_MS);
 
   let lastBroadcast = 0;
+  let lastFootstep = 0;
 
   let lastTime = performance.now();
 
@@ -142,10 +150,16 @@ async function main(): Promise<void> {
     if (move.x !== 0 || move.y !== 0) {
       const nextX = player.x + move.x * MOVE_SPEED * dt;
       const nextY = player.y + move.y * MOVE_SPEED * dt;
+      const moved = isWalkableWorld(nextX, player.y) || isWalkableWorld(player.x, nextY);
       if (isWalkableWorld(nextX, player.y)) player.x = nextX;
       if (isWalkableWorld(player.x, nextY)) player.y = nextY;
       player.facing = move;
       dirtySinceLastSave = true;
+
+      if (moved && now - lastFootstep >= FOOTSTEP_INTERVAL_MS) {
+        lastFootstep = now;
+        soundEngine.playFootstep();
+      }
 
       if (now - lastBroadcast >= MOVE_BROADCAST_INTERVAL_MS) {
         lastBroadcast = now;
@@ -175,8 +189,11 @@ async function main(): Promise<void> {
     }
 
     for (const npc of NPCS) {
-      const screenX = viewWidth / 2 + (npc.x - player.x);
-      const screenY = viewHeight / 2 + (npc.y - player.y);
+      const dx = npc.x - player.x;
+      const dy = npc.y - player.y;
+      if (weather === "fog" && Math.hypot(dx, dy) > FOG_VISIBILITY_RADIUS) continue;
+      const screenX = viewWidth / 2 + dx;
+      const screenY = viewHeight / 2 + dy;
       drawCharacter(ctx, screenX, screenY, { x: 0, y: 1 }, npc.appearance);
       drawNameTag(ctx, screenX, screenY, npc.name);
       if (nearest?.type === "npc" && nearest.id === npc.id) {
@@ -185,8 +202,11 @@ async function main(): Promise<void> {
     }
 
     for (const node of RESOURCE_NODES) {
-      const screenX = viewWidth / 2 + (node.x - player.x);
-      const screenY = viewHeight / 2 + (node.y - player.y);
+      const dx = node.x - player.x;
+      const dy = node.y - player.y;
+      if (weather === "fog" && Math.hypot(dx, dy) > FOG_VISIBILITY_RADIUS) continue;
+      const screenX = viewWidth / 2 + dx;
+      const screenY = viewHeight / 2 + dy;
       const depleted = depletedNodes.has(node.id);
       drawResourceNode(ctx, screenX, screenY, node.itemId, depleted);
       if (nearest?.type === "node" && nearest.id === node.id) {
