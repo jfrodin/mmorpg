@@ -14,9 +14,52 @@
       canvas {
         display: block;
       }
+      #auth-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #10140f;
+        font-family: system-ui, sans-serif;
+        color: #e8e4d8;
+      }
+      #auth-overlay form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        width: 220px;
+      }
+      #auth-overlay input {
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #444;
+        background: #1e241a;
+        color: inherit;
+      }
+      #auth-overlay button {
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: none;
+        background: #3a6b47;
+        color: white;
+        cursor: pointer;
+      }
+      #auth-overlay .toggle {
+        background: none;
+        color: #9fb89f;
+        text-decoration: underline;
+        padding: 0;
+      }
+      #auth-overlay .error {
+        color: #d97f6a;
+        min-height: 1.2em;
+        font-size: 0.85rem;
+      }
     </style>
   </head>
   <body>
+    <div id="auth-overlay"></div>
     <canvas id="game"></canvas>
     <script type="module" src="/src/main.ts"></script>
   </body>

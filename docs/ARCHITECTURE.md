@@ -64,6 +64,10 @@ Kollegans server (drift av "Ruben") kör i praktiken **Kubernetes** med ett sjä
 
 **Beslut för MMORPG v0.1:** bygg och paketera som en portabel Docker-container (samma mönster som FotbollsTipset: multi-stage Dockerfile, migrationer körs vid uppstart). Exakt deploy-väg (docker-compose vs. Gitea CI → Kubernetes) avgörs när vi når deploy-steget — ingen kod låses till den ena eller andra. Öppna frågor att stämma av med Ruben då: WebSocket-stöd i klustrets ingress (sticky sessions/upgrade-headers), samt om databasen ska köra i klustret eller externt (t.ex. Neon, som i FotbollsTipset).
 
+## Känt: produktions-build för server
+
+Servern körs just nu via `tsx` (även tänkt `start`-script), inte som kompilerad JS i `dist/`, eftersom `shared`-paketet bara är rå TypeScript utan egen build-process och Node kan inte köra `.ts`-filer direkt i ett riktigt produktions-Docker-steg. Fungerar utmärkt för utveckling. När vi når deploy-milstolpen (Docker/CI, se hosting-avsnittet) behöver vi antingen bunta `shared` in i serverns build (t.ex. via esbuild/tsup) eller ge `shared` en egen kompileringsstep — löses då, inte innan.
+
 ## Säkerhetsprinciper
 
 Ingen client-authoritative inventory/currency, ingen osanitiserad chat, inga secrets i frontend-kod, ingen godtycklig DB-access från klienten. Ingen enterprise-nivå-överdesign för en prototyp av den här storleken.

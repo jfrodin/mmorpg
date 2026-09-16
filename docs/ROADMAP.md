@@ -3,7 +3,7 @@
 Varje milestone ska vara spelbar/testbar av PO innan nästa påbörjas.
 
 - [ ] **M0 — Skeleton**: repo, build-pipeline, tom canvas som renderar en spelare som kan flyttas med tangentbord (ingen server än)
-- [ ] **M1 — Server + persistence**: Node-server, Postgres, login/karaktärsskapande, position sparas och laddas
+- [x] **M1 — Server + persistence**: Node-server, Postgres (Neon), login/karaktärsskapande, position sparas och laddas
 - [ ] **M2 — Multiplayer core**: WebSocket-synk, flera klienter ser varandra röra sig, disconnect/reconnect
 - [ ] **M3 — Parametrisk appearance**: karaktärsgenerator, val vid skapande, renderas korrekt för alla spelare
 - [ ] **M4 — Världsyta**: stadstorg + väg + skog + strand som tile-baserad karta, kollision, kamera
