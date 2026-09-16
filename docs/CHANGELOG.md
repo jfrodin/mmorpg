@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## 2026-09-16 (bugfix)
+
+- Fixade en renderingsbugg där marken bara målades i nedre högra delen av skärmen (tile-uträkningen tog inte hänsyn till att spelaren ritas i skärmens mitt). Bekräftat åtgärdat av PO.
+
 ## 2026-09-16
 
 - Projektet initierat. Vision, produktionsregler och v0.1-scope diskuterade och beslutade med PO.
