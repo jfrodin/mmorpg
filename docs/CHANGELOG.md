@@ -1,5 +1,13 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M7)
+
+- M7 implementerat: Foraging-skill + inventory, helt server-auktoritativt. Sex resursnoder i skogen (blåbär/kantareller/lingon, `shared/src/resources.ts`), plockbara med **E** inom räckhåll.
+- Nya DB-tabeller: `inventory_items`, `character_skills` (migration `0001_lyrical_unus.sql`).
+- Server validerar avstånd och cooldown per nod, upsertar mängd/xp i DB, broadcastar `node_depleted`/`node_respawned` till alla klienter så tillståndet syns lika för alla. Nya anslutningar får aktuellt depleted-state i `world_snapshot`.
+- Klient: ny väska-panel uppe till höger (items + Foraging-nivå), resursnoder ritas gröna/bruna beroende på om de är plockade eller ej.
+- Verifierat end-to-end mot den riktiga servern: lyckad skörd, blockerad omskörd på tömd nod, blockerad skörd utanför räckhåll, och att inventory/xp faktiskt persisteras.
+
 ## 2026-09-16 (M6)
 
 - M6 implementerat: tre statiska NPC:er (`client/src/world/npcs.ts`) — Birgitta på torget, Sten vid skogsbrynet, Rune vid stranden. Tryck **E** inom räckhåll för att prata; dialogrutan cyklar igenom NPC:ns repliker vid upprepade tryck.

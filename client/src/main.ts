@@ -1,13 +1,16 @@
 import type { RemotePlayerState } from "shared";
+import { RESOURCE_NODES, INTERACT_RANGE } from "shared";
 import { getMoveVector } from "./input/Keyboard";
 import { drawWorld } from "./render/World";
+import { drawResourceNode } from "./render/ResourceNode";
 import { isWalkableWorld } from "./world/tilemap";
 import { drawCharacter, drawNameTag, drawInteractPrompt } from "./appearance/Character";
 import { drawOffscreenIndicator } from "./render/OffscreenIndicator";
 import { runAuthFlow } from "./ui/AuthOverlay";
 import { initChat } from "./ui/Chat";
 import { showDialog } from "./ui/Dialog";
-import { savePosition } from "./net/api";
+import { initInventoryPanel, applyHarvestResult } from "./ui/Inventory";
+import { savePosition, getInventory } from "./net/api";
 import { connectSocket } from "./net/socket";
 import { NPCS } from "./world/npcs";
 
@@ -34,10 +37,12 @@ resize();
 const MOVE_SPEED = 160;
 const POSITION_SAVE_INTERVAL_MS = 3000;
 const MOVE_BROADCAST_INTERVAL_MS = 100;
-const INTERACT_RANGE = 70;
 
 async function main(): Promise<void> {
   const character = await runAuthFlow();
+
+  const inventory = await getInventory().catch(() => ({ items: [], skills: [] }));
+  initInventoryPanel(inventory);
 
   const player = {
     x: character.x,
@@ -69,18 +74,38 @@ async function main(): Promise<void> {
 
   initChat(socket);
 
+  const depletedNodes = new Set<string>();
+  socket.on("world_snapshot", ({ depletedNodes: initiallyDepleted }) => {
+    depletedNodes.clear();
+    for (const id of initiallyDepleted) depletedNodes.add(id);
+  });
+  socket.on("node_depleted", ({ nodeId }) => depletedNodes.add(nodeId));
+  socket.on("node_respawned", ({ nodeId }) => depletedNodes.delete(nodeId));
+
   const npcLineIndex = new Map<string, number>();
-  let nearestNpcId: string | null = null;
+  let nearest: { type: "npc" | "node"; id: string } | null = null;
 
   window.addEventListener("keydown", (e) => {
     if (e.target instanceof HTMLInputElement) return;
-    if (e.key.toLowerCase() !== "e") return;
-    const npc = NPCS.find((n) => n.id === nearestNpcId);
-    if (!npc) return;
+    if (e.key.toLowerCase() !== "e" || !nearest) return;
 
-    const index = npcLineIndex.get(npc.id) ?? 0;
-    showDialog(npc.name, npc.lines[index % npc.lines.length]);
-    npcLineIndex.set(npc.id, index + 1);
+    if (nearest.type === "npc") {
+      const npc = NPCS.find((n) => n.id === nearest!.id);
+      if (!npc) return;
+      const index = npcLineIndex.get(npc.id) ?? 0;
+      showDialog(npc.name, npc.lines[index % npc.lines.length]);
+      npcLineIndex.set(npc.id, index + 1);
+    } else {
+      const nodeId = nearest.id;
+      if (depletedNodes.has(nodeId)) return;
+      socket.emit("harvest", { nodeId }, (result) => {
+        if (!result.ok) {
+          showDialog("", result.error);
+          return;
+        }
+        applyHarvestResult(result.itemId, result.quantity, result.totalXp);
+      });
+    }
   });
 
   let dirtySinceLastSave = false;
@@ -117,12 +142,20 @@ async function main(): Promise<void> {
     drawWorld(ctx, viewWidth, viewHeight, player.x, player.y);
 
     let nearestDist = Infinity;
-    nearestNpcId = null;
+    nearest = null;
     for (const npc of NPCS) {
       const dist = Math.hypot(npc.x - player.x, npc.y - player.y);
       if (dist <= INTERACT_RANGE && dist < nearestDist) {
         nearestDist = dist;
-        nearestNpcId = npc.id;
+        nearest = { type: "npc", id: npc.id };
+      }
+    }
+    for (const node of RESOURCE_NODES) {
+      if (depletedNodes.has(node.id)) continue;
+      const dist = Math.hypot(node.x - player.x, node.y - player.y);
+      if (dist <= INTERACT_RANGE && dist < nearestDist) {
+        nearestDist = dist;
+        nearest = { type: "node", id: node.id };
       }
     }
 
@@ -131,8 +164,18 @@ async function main(): Promise<void> {
       const screenY = viewHeight / 2 + (npc.y - player.y);
       drawCharacter(ctx, screenX, screenY, { x: 0, y: 1 }, npc.appearance);
       drawNameTag(ctx, screenX, screenY, npc.name);
-      if (npc.id === nearestNpcId) {
+      if (nearest?.type === "npc" && nearest.id === npc.id) {
         drawInteractPrompt(ctx, screenX, screenY);
+      }
+    }
+
+    for (const node of RESOURCE_NODES) {
+      const screenX = viewWidth / 2 + (node.x - player.x);
+      const screenY = viewHeight / 2 + (node.y - player.y);
+      const depleted = depletedNodes.has(node.id);
+      drawResourceNode(ctx, screenX, screenY, node.itemId, depleted);
+      if (nearest?.type === "node" && nearest.id === node.id) {
+        drawInteractPrompt(ctx, screenX, screenY - 6);
       }
     }
 

@@ -1,4 +1,4 @@
-import { pgTable, text, real, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, real, integer, jsonb, timestamp, unique } from "drizzle-orm/pg-core";
 import type { AppearanceDescriptor } from "shared";
 
 export const accounts = pgTable("accounts", {
@@ -20,3 +20,29 @@ export const characters = pgTable("characters", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+export const inventoryItems = pgTable(
+  "inventory_items",
+  {
+    id: text("id").primaryKey(),
+    characterId: text("character_id")
+      .notNull()
+      .references(() => characters.id, { onDelete: "cascade" }),
+    itemId: text("item_id").notNull(),
+    quantity: integer("quantity").notNull().default(0),
+  },
+  (table) => [unique().on(table.characterId, table.itemId)]
+);
+
+export const characterSkills = pgTable(
+  "character_skills",
+  {
+    id: text("id").primaryKey(),
+    characterId: text("character_id")
+      .notNull()
+      .references(() => characters.id, { onDelete: "cascade" }),
+    skill: text("skill").notNull(),
+    xp: integer("xp").notNull().default(0),
+  },
+  (table) => [unique().on(table.characterId, table.skill)]
+);

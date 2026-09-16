@@ -47,3 +47,12 @@ export function savePosition(x: number, y: number) {
     body: JSON.stringify({ x, y }),
   });
 }
+
+export interface InventorySummary {
+  items: { itemId: string; quantity: number }[];
+  skills: { skill: string; xp: number }[];
+}
+
+export function getInventory() {
+  return request<InventorySummary>("/character/inventory");
+}

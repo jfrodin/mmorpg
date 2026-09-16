@@ -2,16 +2,42 @@ import type { Server as HttpServer } from "node:http";
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import { parse as parseCookie } from "cookie";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
   RemotePlayerState,
   Character,
+  HarvestResult,
 } from "shared";
+import { RESOURCE_NODES, FORAGING_XP_PER_HARVEST, INTERACT_RANGE } from "shared";
 import { db } from "../db/client";
-import { characters } from "../db/schema";
+import { characters, inventoryItems, characterSkills } from "../db/schema";
 import type { SessionPayload } from "../auth/session";
+
+async function addInventoryItem(characterId: string, itemId: string, amount: number): Promise<number> {
+  const [row] = await db
+    .insert(inventoryItems)
+    .values({ id: crypto.randomUUID(), characterId, itemId, quantity: amount })
+    .onConflictDoUpdate({
+      target: [inventoryItems.characterId, inventoryItems.itemId],
+      set: { quantity: sql`${inventoryItems.quantity} + ${amount}` },
+    })
+    .returning({ quantity: inventoryItems.quantity });
+  return row.quantity;
+}
+
+async function addSkillXp(characterId: string, skill: string, amount: number): Promise<number> {
+  const [row] = await db
+    .insert(characterSkills)
+    .values({ id: crypto.randomUUID(), characterId, skill, xp: amount })
+    .onConflictDoUpdate({
+      target: [characterSkills.characterId, characterSkills.skill],
+      set: { xp: sql`${characterSkills.xp} + ${amount}` },
+    })
+    .returning({ xp: characterSkills.xp });
+  return row.xp;
+}
 
 interface SocketData {
   accountId: string;
@@ -31,6 +57,7 @@ function sanitizeChatText(text: unknown): string | null {
 
 const players = new Map<string, RemotePlayerState>();
 const socketsByAccountId = new Map<string, import("socket.io").Socket>();
+const depletedNodes = new Map<string, ReturnType<typeof setTimeout>>();
 
 export function setupRealtime(httpServer: HttpServer): void {
   const io = new Server<ClientToServerEvents, ServerToClientEvents, object, SocketData>(
@@ -84,6 +111,7 @@ export function setupRealtime(httpServer: HttpServer): void {
 
     socket.emit("world_snapshot", {
       players: Array.from(players.values()).filter((p) => p.accountId !== accountId),
+      depletedNodes: Array.from(depletedNodes.keys()),
     });
     socket.broadcast.emit("player_joined", { player: state });
 
@@ -125,6 +153,46 @@ export function setupRealtime(httpServer: HttpServer): void {
         if (dist <= CHAT_RADIUS) {
           socketsByAccountId.get(otherId)?.emit("chat_message", message);
         }
+      }
+    });
+
+    socket.on("harvest", async (payload, callback) => {
+      const node = RESOURCE_NODES.find((n) => n.id === payload?.nodeId);
+      if (!node) {
+        callback({ ok: false, error: "Okänd resurs." });
+        return;
+      }
+      if (depletedNodes.has(node.id)) {
+        callback({ ok: false, error: "Redan plockat tomt. Vänta tills det växer tillbaka." });
+        return;
+      }
+      const dist = Math.hypot(node.x - state.x, node.y - state.y);
+      if (dist > INTERACT_RANGE) {
+        callback({ ok: false, error: "För långt bort." });
+        return;
+      }
+
+      const timeout = setTimeout(() => {
+        depletedNodes.delete(node.id);
+        io.emit("node_respawned", { nodeId: node.id });
+      }, node.respawnMs);
+      depletedNodes.set(node.id, timeout);
+      io.emit("node_depleted", { nodeId: node.id });
+
+      try {
+        const quantity = await addInventoryItem(character.id, node.itemId, 1);
+        const totalXp = await addSkillXp(character.id, "foraging", FORAGING_XP_PER_HARVEST);
+        const result: HarvestResult = {
+          ok: true,
+          itemId: node.itemId,
+          quantity,
+          xp: FORAGING_XP_PER_HARVEST,
+          totalXp,
+        };
+        callback(result);
+      } catch (err) {
+        console.error("harvest failed", err);
+        callback({ ok: false, error: "Något gick fel." });
       }
     });
 

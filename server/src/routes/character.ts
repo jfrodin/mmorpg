@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import type { AppearanceDescriptor } from "shared";
 import { SPAWN_POINT } from "shared";
 import { db } from "../db/client";
-import { characters } from "../db/schema";
+import { characters, inventoryItems, characterSkills } from "../db/schema";
 import { requireAuth, type AuthedRequest } from "../auth/session";
 
 export const characterRouter = Router();
@@ -69,6 +69,26 @@ characterRouter.post("/", async (req: AuthedRequest, res) => {
     where: eq(characters.id, id),
   });
   res.status(201).json(character);
+});
+
+characterRouter.get("/inventory", async (req: AuthedRequest, res) => {
+  const character = await db.query.characters.findFirst({
+    where: eq(characters.accountId, req.accountId!),
+  });
+  if (!character) {
+    res.status(404).json({ error: "no character" });
+    return;
+  }
+
+  const [items, skills] = await Promise.all([
+    db.query.inventoryItems.findMany({ where: eq(inventoryItems.characterId, character.id) }),
+    db.query.characterSkills.findMany({ where: eq(characterSkills.characterId, character.id) }),
+  ]);
+
+  res.json({
+    items: items.map((i) => ({ itemId: i.itemId, quantity: i.quantity })),
+    skills: skills.map((s) => ({ skill: s.skill, xp: s.xp })),
+  });
 });
 
 characterRouter.patch("/position", async (req: AuthedRequest, res) => {

@@ -11,13 +11,15 @@ export function showDialog(name: string, text: string): void {
   }
 
   box.innerHTML = "";
-  const nameEl = document.createElement("div");
-  nameEl.className = "dialog-name";
-  nameEl.textContent = name;
+  if (name) {
+    const nameEl = document.createElement("div");
+    nameEl.className = "dialog-name";
+    nameEl.textContent = name;
+    box.appendChild(nameEl);
+  }
   const textEl = document.createElement("div");
   textEl.className = "dialog-text";
   textEl.textContent = text;
-  box.appendChild(nameEl);
   box.appendChild(textEl);
 
   box.classList.remove("fade");

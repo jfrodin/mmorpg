@@ -167,6 +167,52 @@
         font-size: 14px;
         line-height: 1.4;
       }
+      #inventory-panel {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 5;
+        min-width: 150px;
+        background: rgba(10, 14, 10, 0.55);
+        border-radius: 6px;
+        padding: 0.5rem 0.7rem;
+        font-family: system-ui, sans-serif;
+        color: #f0ece0;
+        pointer-events: none;
+      }
+      #inventory-panel .inventory-title {
+        font-weight: 600;
+        font-size: 12px;
+        color: #9fb89f;
+        margin-bottom: 0.3rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      #inventory-panel .inventory-empty {
+        font-size: 12px;
+        color: #888;
+      }
+      #inventory-panel .inventory-row {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 13px;
+        margin-bottom: 0.15rem;
+      }
+      #inventory-panel .inventory-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      #inventory-panel .inventory-skill {
+        margin-top: 0.4rem;
+        padding-top: 0.35rem;
+        border-top: 1px solid rgba(240, 236, 224, 0.15);
+        font-size: 11px;
+        color: #9fb89f;
+      }
     </style>
   </head>
   <body>
