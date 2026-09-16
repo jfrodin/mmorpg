@@ -11,7 +11,7 @@ Varje milestone ska vara spelbar/testbar av PO innan nästa påbörjas.
 - [x] **M6 — NPC + dialog**: statiska NPC:er, enkel dialogruta
 - [x] **M7 — Foraging + inventory**: gatherable resurser, inventory-UI, server-validerad pickup
 - [x] **M8 — Dag/natt + väder**: tidscykel, ljus-overlay, ett väderläge (dimma)
-- [ ] **M9 — Mystery-implementation**: efter PO-godkännande av koncept (se WORLD.md PROPOSAL), bygg observations-/ledtrådselement
+- [x] **M9 — Mystery-implementation**: "Ljusen ute på ön" implementerat (koncept redan godkänt i WORLD.md)
 - [ ] **M10 — Polish-pass**: ljud (footsteps, ambience, UI), buggfixar, grundläggande balansering
 
 ## Efter v0.1 (ej detaljplanerat)

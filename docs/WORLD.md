@@ -32,6 +32,7 @@ Tills namn finns används generiska platshållare i kod och content: `staden`, `
 
 ## IMPLEMENTED
 
-- **v0.1 startområde** (klient-sida tile-karta, `client/src/world/starting-area.ts`, 120×90 rutor): ett litet torg (kullersten) med fem enkla byggnadsplaceringar runt om, en väg österut ut ur torget, ett skogsområde västerut (strödda träd, ~16% densitet), samt en bit sjöstrand söderut (sand → vatten). Kollision på byggnader/träd/vatten.
-- Detta är EN LITEN DEL av den godkända Ö-stads-geografin ovan — inte hela konceptet. Halvön/ön, bron och de omgivande öarna i sjön är ännu INTE byggda; det är kvar för senare världsutbyggnad utöver v0.1-scopet.
+- **v0.1 startområde** (klient-sida tile-karta, `client/src/world/starting-area.ts`, 120×110 rutor): ett litet torg (kullersten) med fem enkla byggnadsplaceringar runt om, en väg österut ut ur torget, ett skogsområde västerut (strödda träd, ~16% densitet), en bit sjöstrand söderut (sand → vatten), samt ute på sjön en liten obebodd ö (skog, ~12% träddensitet) och en mindre, rent visuell holme.
+- Detta är EN LITEN DEL av den godkända Ö-stads-geografin ovan — inte hela konceptet. Halvön/bron och stadens läge rakt ut i sjön är ännu INTE byggda; det är kvar för senare världsutbyggnad utöver v0.1-scopet.
 - Nya karaktärer spawnar på torget (`SPAWN_POINT` i `shared/src/world.ts`).
+- **Mysteriet "Ljusen ute på ön" är implementerat** (`shared/src/mystery.ts`): ön är avsiktligt oåtkomlig till fots (ingen bro, vatten blockerar) — ljuset kan bara *observeras* på håll, aldrig besökas, precis som konceptet kräver. Villkor: mörker (natt) + klart väder (inte dimma), och även då bara ~50% av nätterna (deterministiskt beräknat från den delade dygnscykeln, så alla spelare online ser exakt samma sak samma natt — ingen server-roundtrip, ingen extra nätverkstrafik). Ingen UI-markering, inget quest-tracking — bara en svag glöd man kan råka se eller missa, exakt som §25 kräver.

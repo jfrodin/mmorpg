@@ -5,7 +5,7 @@ import type { RegionDefinition } from "./types";
 export const startingArea: RegionDefinition = {
   id: "starting-area",
   widthTiles: 120,
-  heightTiles: 90,
+  heightTiles: 110,
   layers: [
     { kind: "fill", data: { type: "grass", x0: 0, y0: 0, x1: 120, y1: 90 } },
 
@@ -31,6 +31,17 @@ export const startingArea: RegionDefinition = {
 
     // Lake shore, south.
     { kind: "fill", data: { type: "sand", x0: 15, y0: 60, x1: 95, y1: 68 } },
-    { kind: "fill", data: { type: "water", x0: 10, y0: 68, x1: 100, y1: 90 } },
+    { kind: "fill", data: { type: "water", x0: 10, y0: 68, x1: 100, y1: 110 } },
+
+    // A small island out on the lake — no bridge, unreachable on foot by
+    // design (see docs/WORLD.md mystery concept: observed, not visited).
+    { kind: "fill", data: { type: "forest_floor", x0: 50, y0: 92, x1: 58, y1: 100 } },
+    {
+      kind: "scatter",
+      data: { type: "tree", x0: 50, y0: 92, x1: 58, y1: 100, density: 0.12, seed: 99 },
+    },
+
+    // A second, smaller uninhabited islet nearby — purely scenic.
+    { kind: "fill", data: { type: "grass", x0: 70, y0: 85, x1: 74, y1: 89 } },
   ],
 };

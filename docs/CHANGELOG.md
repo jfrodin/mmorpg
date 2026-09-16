@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M9 + världsutbyggnad)
+
+- M9 implementerat: mysteriet "Ljusen ute på ön" (redan CANON-godkänt koncept i WORLD.md). Kartan utökad (90→110 rutor hög) med en liten obebodd ö ute på sjön (ingen bro — avsiktligt oåtkomlig till fots) plus en mindre rent visuell holme.
+- Ljuset syns bara vid mörker + klart väder, och även då bara ~50% av nätterna — beräknat deterministiskt av varje klient från den redan delade dygns-/väderstaten (`shared/src/mystery.ts`), så alla spelare online ser exakt samma natt utan någon extra serverkommunikation.
+- Inget UI pekar ut ljuset. Ingen quest, ingen markör. Precis vad §25 efterfrågar: en möjlig-att-missa iakttagelse spelare kan jämföra sinsemellan.
+- PO gav generellt godkännande att fortsätta expandera världen självständigt utan att fråga för varje steg.
+
 ## 2026-09-16 (M8)
 
 - M8 implementerat: server-auktoritativ dygnscykel (20 min/varv) och väder (clear/fog, växlar var 3-8:e minut). Alla klienter delar samma tid/väder — servern skickar bara en referenspunkt, klienten räknar tid lokalt för mjuk animation.

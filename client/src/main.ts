@@ -1,9 +1,10 @@
 import type { RemotePlayerState, Weather } from "shared";
-import { RESOURCE_NODES, INTERACT_RANGE } from "shared";
+import { RESOURCE_NODES, INTERACT_RANGE, ISLAND_LIGHT_POSITION, isIslandLightActive } from "shared";
 import { getMoveVector } from "./input/Keyboard";
 import { drawWorld } from "./render/World";
 import { drawResourceNode } from "./render/ResourceNode";
-import { drawDayNightOverlay, drawFogOverlay } from "./render/DayNight";
+import { drawDayNightOverlay, drawFogOverlay, getDarkness } from "./render/DayNight";
+import { drawIslandLight } from "./render/Mystery";
 import { isWalkableWorld } from "./world/tilemap";
 import { drawCharacter, drawNameTag, drawInteractPrompt } from "./appearance/Character";
 import { drawOffscreenIndicator } from "./render/OffscreenIndicator";
@@ -220,7 +221,21 @@ async function main(): Promise<void> {
       drawFogOverlay(ctx, viewWidth, viewHeight);
     }
     const timeOfDay = ((Date.now() - dayStartedAt) % dayLengthMs) / dayLengthMs;
+    const darkness = getDarkness(timeOfDay);
     drawDayNightOverlay(ctx, viewWidth, viewHeight, timeOfDay);
+
+    if (isIslandLightActive(dayStartedAt, dayLengthMs, weather, darkness)) {
+      const lightScreenX = viewWidth / 2 + (ISLAND_LIGHT_POSITION.x - player.x);
+      const lightScreenY = viewHeight / 2 + (ISLAND_LIGHT_POSITION.y - player.y);
+      if (
+        lightScreenX > -50 &&
+        lightScreenX < viewWidth + 50 &&
+        lightScreenY > -50 &&
+        lightScreenY < viewHeight + 50
+      ) {
+        drawIslandLight(ctx, lightScreenX, lightScreenY);
+      }
+    }
 
     requestAnimationFrame(tick);
   }
