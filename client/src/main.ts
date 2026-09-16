@@ -2,6 +2,7 @@ import type { RemotePlayerState } from "shared";
 import { getMoveVector } from "./input/Keyboard";
 import { drawGround } from "./render/Ground";
 import { drawCharacter, drawNameTag } from "./appearance/Character";
+import { drawOffscreenIndicator } from "./render/OffscreenIndicator";
 import { runAuthFlow } from "./ui/AuthOverlay";
 import { savePosition } from "./net/api";
 import { connectSocket } from "./net/socket";
@@ -93,10 +94,20 @@ async function main(): Promise<void> {
     drawGround(ctx, viewWidth, viewHeight, player.x, player.y);
 
     for (const remote of remotePlayers.values()) {
-      const screenX = viewWidth / 2 + (remote.x - player.x);
-      const screenY = viewHeight / 2 + (remote.y - player.y);
-      drawCharacter(ctx, screenX, screenY, remote.facing, remote.appearance);
-      drawNameTag(ctx, screenX, screenY, remote.name);
+      const dx = remote.x - player.x;
+      const dy = remote.y - player.y;
+      const screenX = viewWidth / 2 + dx;
+      const screenY = viewHeight / 2 + dy;
+
+      const onScreen =
+        screenX > -20 && screenX < viewWidth + 20 && screenY > -20 && screenY < viewHeight + 20;
+
+      if (onScreen) {
+        drawCharacter(ctx, screenX, screenY, remote.facing, remote.appearance);
+        drawNameTag(ctx, screenX, screenY, remote.name);
+      } else {
+        drawOffscreenIndicator(ctx, viewWidth, viewHeight, dx, dy, remote.name);
+      }
     }
 
     drawCharacter(ctx, viewWidth / 2, viewHeight / 2, player.facing, character.appearance);
