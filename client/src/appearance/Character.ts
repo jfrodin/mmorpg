@@ -58,3 +58,18 @@ export function drawNameTag(
   ctx.fillText(name, screenX, screenY - 35);
   ctx.restore();
 }
+
+export function drawInteractPrompt(
+  ctx: CanvasRenderingContext2D,
+  screenX: number,
+  screenY: number
+): void {
+  ctx.save();
+  ctx.font = "11px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+  ctx.fillText("[E] Prata", screenX + 1, screenY - 47);
+  ctx.fillStyle = "#e8c96a";
+  ctx.fillText("[E] Prata", screenX, screenY - 48);
+  ctx.restore();
+}

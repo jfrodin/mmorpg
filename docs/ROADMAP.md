@@ -8,7 +8,7 @@ Varje milestone ska vara spelbar/testbar av PO innan nästa påbörjas.
 - [x] **M3 — Parametrisk appearance**: karaktärsgenerator, val vid skapande, renderas korrekt för alla spelare
 - [x] **M4 — Världsyta**: stadstorg + väg + skog + strand som tile-baserad karta, kollision, kamera
 - [x] **M5 — Chat**: enkel lokal/närhetsbaserad textchatt
-- [ ] **M6 — NPC + dialog**: statiska NPC:er, enkel dialogruta
+- [x] **M6 — NPC + dialog**: statiska NPC:er, enkel dialogruta
 - [ ] **M7 — Foraging + inventory**: gatherable resurser, inventory-UI, server-validerad pickup
 - [ ] **M8 — Dag/natt + väder**: tidscykel, ljus-overlay, ett väderläge (dimma)
 - [ ] **M9 — Mystery-implementation**: efter PO-godkännande av koncept (se WORLD.md PROPOSAL), bygg observations-/ledtrådselement

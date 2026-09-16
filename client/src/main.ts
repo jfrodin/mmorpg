@@ -2,12 +2,14 @@ import type { RemotePlayerState } from "shared";
 import { getMoveVector } from "./input/Keyboard";
 import { drawWorld } from "./render/World";
 import { isWalkableWorld } from "./world/tilemap";
-import { drawCharacter, drawNameTag } from "./appearance/Character";
+import { drawCharacter, drawNameTag, drawInteractPrompt } from "./appearance/Character";
 import { drawOffscreenIndicator } from "./render/OffscreenIndicator";
 import { runAuthFlow } from "./ui/AuthOverlay";
 import { initChat } from "./ui/Chat";
+import { showDialog } from "./ui/Dialog";
 import { savePosition } from "./net/api";
 import { connectSocket } from "./net/socket";
+import { NPCS } from "./world/npcs";
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
@@ -32,6 +34,7 @@ resize();
 const MOVE_SPEED = 160;
 const POSITION_SAVE_INTERVAL_MS = 3000;
 const MOVE_BROADCAST_INTERVAL_MS = 100;
+const INTERACT_RANGE = 70;
 
 async function main(): Promise<void> {
   const character = await runAuthFlow();
@@ -66,6 +69,20 @@ async function main(): Promise<void> {
 
   initChat(socket);
 
+  const npcLineIndex = new Map<string, number>();
+  let nearestNpcId: string | null = null;
+
+  window.addEventListener("keydown", (e) => {
+    if (e.target instanceof HTMLInputElement) return;
+    if (e.key.toLowerCase() !== "e") return;
+    const npc = NPCS.find((n) => n.id === nearestNpcId);
+    if (!npc) return;
+
+    const index = npcLineIndex.get(npc.id) ?? 0;
+    showDialog(npc.name, npc.lines[index % npc.lines.length]);
+    npcLineIndex.set(npc.id, index + 1);
+  });
+
   let dirtySinceLastSave = false;
   setInterval(() => {
     if (!dirtySinceLastSave) return;
@@ -98,6 +115,26 @@ async function main(): Promise<void> {
 
     ctx.clearRect(0, 0, viewWidth, viewHeight);
     drawWorld(ctx, viewWidth, viewHeight, player.x, player.y);
+
+    let nearestDist = Infinity;
+    nearestNpcId = null;
+    for (const npc of NPCS) {
+      const dist = Math.hypot(npc.x - player.x, npc.y - player.y);
+      if (dist <= INTERACT_RANGE && dist < nearestDist) {
+        nearestDist = dist;
+        nearestNpcId = npc.id;
+      }
+    }
+
+    for (const npc of NPCS) {
+      const screenX = viewWidth / 2 + (npc.x - player.x);
+      const screenY = viewHeight / 2 + (npc.y - player.y);
+      drawCharacter(ctx, screenX, screenY, { x: 0, y: 1 }, npc.appearance);
+      drawNameTag(ctx, screenX, screenY, npc.name);
+      if (npc.id === nearestNpcId) {
+        drawInteractPrompt(ctx, screenX, screenY);
+      }
+    }
 
     for (const remote of remotePlayers.values()) {
       const dx = remote.x - player.x;

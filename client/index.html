@@ -138,6 +138,35 @@
         color: #f0ece0;
         font-size: 13px;
       }
+      #dialog-box {
+        position: fixed;
+        left: 50%;
+        bottom: 90px;
+        transform: translateX(-50%);
+        z-index: 5;
+        max-width: 420px;
+        background: rgba(10, 14, 10, 0.75);
+        border: 1px solid rgba(240, 236, 224, 0.2);
+        border-radius: 6px;
+        padding: 0.6rem 0.9rem;
+        font-family: system-ui, sans-serif;
+        color: #f0ece0;
+        pointer-events: none;
+        transition: opacity 0.8s;
+      }
+      #dialog-box.fade {
+        opacity: 0;
+      }
+      #dialog-box .dialog-name {
+        color: #e8c96a;
+        font-weight: 600;
+        font-size: 13px;
+        margin-bottom: 0.2rem;
+      }
+      #dialog-box .dialog-text {
+        font-size: 14px;
+        line-height: 1.4;
+      }
     </style>
   </head>
   <body>

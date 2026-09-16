@@ -1,5 +1,10 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M6)
+
+- M6 implementerat: tre statiska NPC:er (`client/src/world/npcs.ts`) — Birgitta på torget, Sten vid skogsbrynet, Rune vid stranden. Tryck **E** inom räckhåll för att prata; dialogrutan cyklar igenom NPC:ns repliker vid upprepade tryck.
+- Ingen quest-marker-logik — replikerna är bara vardaglig småprat, i linje med CONTENT_GUIDE.md. Runes rad om "ett ljus ute på ön om nätterna" är en avsiktlig, lågmäld koppling till det redan godkända mysteriekonceptet i WORLD.md (§25: skrönor, inte en quest).
+
 ## 2026-09-16 (M5)
 
 - M5 implementerat: enkel närhetsbaserad textchatt. Server broadcastar bara ett meddelande till spelare inom 500 world units (`CHAT_RADIUS`) från avsändaren, inte globalt — matchar GAME_DESIGN.md-beslutet om lokal chat.
