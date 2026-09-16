@@ -4,7 +4,7 @@ import type { RegionDefinition } from "./types";
 // deliberately unresolved (docs/WORLD.md) — this file only encodes shape.
 export const startingArea: RegionDefinition = {
   id: "starting-area",
-  widthTiles: 120,
+  widthTiles: 170,
   heightTiles: 110,
   layers: [
     { kind: "fill", data: { type: "grass", x0: 0, y0: 0, x1: 120, y1: 90 } },
@@ -26,8 +26,22 @@ export const startingArea: RegionDefinition = {
     { kind: "fill", data: { type: "building", x0: 59, y0: 36, x1: 64, y1: 44 } },
     { kind: "fill", data: { type: "building", x0: 40, y0: 53, x1: 48, y1: 58 } },
 
-    // Road out of town, east.
-    { kind: "fill", data: { type: "path", x0: 58, y0: 46, x1: 120, y1: 50 } },
+    // Road out of town, east — leads to a small rural crossroads.
+    { kind: "fill", data: { type: "path", x0: 58, y0: 46, x1: 170, y1: 50 } },
+    { kind: "fill", data: { type: "path", x0: 148, y0: 20, x1: 152, y1: 90 } },
+
+    // A farm at the crossroads — one of the "landsbygd/gårdar" landmarks
+    // from the approved geography concept, not yet named (see WORLD.md).
+    { kind: "fill", data: { type: "building", x0: 138, y0: 36, x1: 146, y1: 44 } },
+    { kind: "fill", data: { type: "building", x0: 156, y0: 52, x1: 166, y1: 60 } },
+    {
+      kind: "scatter",
+      data: { type: "tree", x0: 130, y0: 15, x1: 147, y1: 30, density: 0.1, seed: 41 },
+    },
+    {
+      kind: "scatter",
+      data: { type: "tree", x0: 153, y0: 15, x1: 170, y1: 30, density: 0.1, seed: 42 },
+    },
 
     // Lake shore, south.
     { kind: "fill", data: { type: "sand", x0: 15, y0: 60, x1: 95, y1: 68 } },

@@ -61,4 +61,21 @@ export const NPCS: NpcDefinition[] = [
       "Sjön kan vara lynnig. Ta det lugnt där ute.",
     ],
   },
+  {
+    id: "crossroads-farmer",
+    name: "Ingvar",
+    x: 142 * 48,
+    y: 47 * 48,
+    appearance: {
+      jacketColor: "#8a7a2e",
+      pantsColor: "#4a3728",
+      skinColor: "#c98f5e",
+      hairColor: "#8a8a8a",
+    },
+    lines: [
+      "Skörden ser bra ut i år, om vädret bara håller i sig.",
+      "Ta gärna vägen om du ska in mot stan — kortare än att gå genom skogen.",
+      "Grannens ko kom lös igen i natt. Tredje gången den här månaden.",
+    ],
+  },
 ];

@@ -1,5 +1,10 @@
 # CHANGELOG.md
 
+## 2026-09-16 (världsutbyggnad efter v0.1)
+
+- Kartan utökad österut (120→170 rutor bred): vägen från torget fortsätter till en liten lantlig korsning med en gård (bostadshus + lada) och en ny NPC, Ingvar (lantbrukare) — matchar "landsbygd/gårdar" i den godkända geografin (§8), inget nytt PO-beslut krävt eftersom det bara fyller i redan godkänt konceptutrymme.
+- Fortsätter på PO:s stående instruktion att självständigt bygga vidare på världen.
+
 ## 2026-09-16 (M10 — v0.1 vertical slice klar)
 
 - M10 implementerat: ljud helt genererat via Web Audio API (`client/src/audio/SoundEngine.ts`) — inga ljudfiler. Fotsteg (varierad brusbaserad), UI-ljud vid chattmeddelande/dialog/skörd, och en tyst genererad vind-ambience som startar vid första användarinteraktion (krävs av webbläsarnas autoplay-policy).
