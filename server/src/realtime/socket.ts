@@ -18,7 +18,19 @@ interface SocketData {
   character: Character;
 }
 
+const CHAT_RADIUS = 500;
+const CHAT_MAX_LENGTH = 240;
+
+function sanitizeChatText(text: unknown): string | null {
+  if (typeof text !== "string") return null;
+  // eslint-disable-next-line no-control-regex
+  const cleaned = text.replace(/[\x00-\x1f\x7f]/g, "").trim();
+  if (!cleaned) return null;
+  return cleaned.slice(0, CHAT_MAX_LENGTH);
+}
+
 const players = new Map<string, RemotePlayerState>();
+const socketsByAccountId = new Map<string, import("socket.io").Socket>();
 
 export function setupRealtime(httpServer: HttpServer): void {
   const io = new Server<ClientToServerEvents, ServerToClientEvents, object, SocketData>(
@@ -68,6 +80,7 @@ export function setupRealtime(httpServer: HttpServer): void {
       appearance: character.appearance,
     };
     players.set(accountId, state);
+    socketsByAccountId.set(accountId, socket);
 
     socket.emit("world_snapshot", {
       players: Array.from(players.values()).filter((p) => p.accountId !== accountId),
@@ -94,8 +107,30 @@ export function setupRealtime(httpServer: HttpServer): void {
       });
     });
 
+    socket.on("chat", (payload) => {
+      const text = sanitizeChatText(payload?.text);
+      if (!text) return;
+
+      const message = {
+        accountId,
+        name: state.name,
+        text,
+        x: state.x,
+        y: state.y,
+        at: Date.now(),
+      };
+
+      for (const [otherId, otherState] of players) {
+        const dist = Math.hypot(otherState.x - state.x, otherState.y - state.y);
+        if (dist <= CHAT_RADIUS) {
+          socketsByAccountId.get(otherId)?.emit("chat_message", message);
+        }
+      }
+    });
+
     socket.on("disconnect", () => {
       players.delete(accountId);
+      socketsByAccountId.delete(accountId);
       socket.broadcast.emit("player_left", { accountId });
     });
   });

@@ -1,7 +1,18 @@
 const pressed = new Set<string>();
 
-window.addEventListener("keydown", (e) => pressed.add(e.key.toLowerCase()));
-window.addEventListener("keyup", (e) => pressed.delete(e.key.toLowerCase()));
+function isTypingTarget(target: EventTarget | null): boolean {
+  return target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
+}
+
+window.addEventListener("keydown", (e) => {
+  if (isTypingTarget(e.target)) return;
+  pressed.add(e.key.toLowerCase());
+});
+window.addEventListener("keyup", (e) => {
+  if (isTypingTarget(e.target)) return;
+  pressed.delete(e.key.toLowerCase());
+});
+window.addEventListener("blur", () => pressed.clear());
 
 export function isDown(...keys: string[]): boolean {
   return keys.some((k) => pressed.has(k));

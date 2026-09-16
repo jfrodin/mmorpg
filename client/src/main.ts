@@ -5,6 +5,7 @@ import { isWalkableWorld } from "./world/tilemap";
 import { drawCharacter, drawNameTag } from "./appearance/Character";
 import { drawOffscreenIndicator } from "./render/OffscreenIndicator";
 import { runAuthFlow } from "./ui/AuthOverlay";
+import { initChat } from "./ui/Chat";
 import { savePosition } from "./net/api";
 import { connectSocket } from "./net/socket";
 
@@ -62,6 +63,8 @@ async function main(): Promise<void> {
   socket.on("player_left", ({ accountId }) => {
     remotePlayers.delete(accountId);
   });
+
+  initChat(socket);
 
   let dirtySinceLastSave = false;
   setInterval(() => {

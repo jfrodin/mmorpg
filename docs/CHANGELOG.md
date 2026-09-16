@@ -1,5 +1,13 @@
 # CHANGELOG.md
 
+## 2026-09-16 (M5)
+
+- M5 implementerat: enkel närhetsbaserad textchatt. Server broadcastar bara ett meddelande till spelare inom 500 world units (`CHAT_RADIUS`) från avsändaren, inte globalt — matchar GAME_DESIGN.md-beslutet om lokal chat.
+- Klient: tryck Enter för att öppna chattraden, Enter skickar, Esc avbryter. Meddelanden visas i en tonande logg nere till vänster.
+- Server sanerar chattext (kontrolltecken bort, trim, 240 tecken-gräns).
+- Tangentbordsrörelse pausas nu automatiskt medan man skriver i ett inputfält (chat eller annat), och nedtryckta tangenter nollställs vid fönster-blur för att undvika "fastnade" rörelsetangenter.
+- Verifierat med ett tvåspelar-testskript: spelare inom radien fick meddelandet, spelare utanför fick det inte, avsändaren ser sitt eget meddelande.
+
 ## 2026-09-16 (M4)
 
 - M4 implementerat: ersatte den oändliga procedurella gräsytan med en riktig tile-karta (`client/src/world/starting-area.ts`) — litet torg (kullersten) med fem byggnader runt om, väg österut, skogsområde västerut med strödda träd, sjöstrand (sand+vatten) söderut.

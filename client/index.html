@@ -93,6 +93,51 @@
         min-height: 1.2em;
         font-size: 0.85rem;
       }
+      #chat-log {
+        position: fixed;
+        left: 16px;
+        bottom: 60px;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        max-width: 360px;
+        font-family: system-ui, sans-serif;
+        font-size: 13px;
+        pointer-events: none;
+      }
+      #chat-log .chat-line {
+        background: rgba(10, 14, 10, 0.55);
+        color: #f0ece0;
+        padding: 2px 8px;
+        border-radius: 3px;
+        width: fit-content;
+        transition: opacity 1s;
+      }
+      #chat-log .chat-line.fade {
+        opacity: 0;
+      }
+      #chat-log .chat-name {
+        color: #9fb89f;
+        font-weight: 600;
+      }
+      #chat-input-bar {
+        position: fixed;
+        left: 16px;
+        bottom: 16px;
+        z-index: 6;
+        width: 360px;
+      }
+      #chat-input-bar input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.4rem 0.6rem;
+        border-radius: 4px;
+        border: 1px solid #444;
+        background: rgba(20, 26, 18, 0.85);
+        color: #f0ece0;
+        font-size: 13px;
+      }
     </style>
   </head>
   <body>

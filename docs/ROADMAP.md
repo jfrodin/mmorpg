@@ -7,7 +7,7 @@ Varje milestone ska vara spelbar/testbar av PO innan nästa påbörjas.
 - [x] **M2 — Multiplayer core**: WebSocket-synk (Socket.IO), flera klienter ser varandra röra sig, disconnect/reconnect
 - [x] **M3 — Parametrisk appearance**: karaktärsgenerator, val vid skapande, renderas korrekt för alla spelare
 - [x] **M4 — Världsyta**: stadstorg + väg + skog + strand som tile-baserad karta, kollision, kamera
-- [ ] **M5 — Chat**: enkel lokal/närhetsbaserad textchatt
+- [x] **M5 — Chat**: enkel lokal/närhetsbaserad textchatt
 - [ ] **M6 — NPC + dialog**: statiska NPC:er, enkel dialogruta
 - [ ] **M7 — Foraging + inventory**: gatherable resurser, inventory-UI, server-validerad pickup
 - [ ] **M8 — Dag/natt + väder**: tidscykel, ljus-overlay, ett väderläge (dimma)
