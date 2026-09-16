@@ -18,8 +18,14 @@ function isValidPassword(password: unknown): password is string {
 authRouter.post("/register", async (req, res) => {
   const { username, password } = req.body ?? {};
 
-  if (!isValidUsername(username) || !isValidPassword(password)) {
-    res.status(400).json({ error: "invalid username or password" });
+  if (!isValidUsername(username)) {
+    res.status(400).json({
+      error: "Användarnamn måste vara 3-20 tecken (bokstäver, siffror, understreck).",
+    });
+    return;
+  }
+  if (!isValidPassword(password)) {
+    res.status(400).json({ error: "Lösenordet måste vara minst 8 tecken." });
     return;
   }
 
@@ -27,7 +33,7 @@ authRouter.post("/register", async (req, res) => {
     where: eq(accounts.username, username),
   });
   if (existing) {
-    res.status(409).json({ error: "username taken" });
+    res.status(409).json({ error: "Användarnamnet är upptaget." });
     return;
   }
 
@@ -44,7 +50,7 @@ authRouter.post("/login", async (req, res) => {
   const { username, password } = req.body ?? {};
 
   if (!isValidUsername(username) || !isValidPassword(password)) {
-    res.status(400).json({ error: "invalid username or password" });
+    res.status(400).json({ error: "Fel användarnamn eller lösenord." });
     return;
   }
 
@@ -52,13 +58,13 @@ authRouter.post("/login", async (req, res) => {
     where: eq(accounts.username, username),
   });
   if (!account) {
-    res.status(401).json({ error: "invalid credentials" });
+    res.status(401).json({ error: "Fel användarnamn eller lösenord." });
     return;
   }
 
   const valid = await bcrypt.compare(password, account.passwordHash);
   if (!valid) {
-    res.status(401).json({ error: "invalid credentials" });
+    res.status(401).json({ error: "Fel användarnamn eller lösenord." });
     return;
   }
 

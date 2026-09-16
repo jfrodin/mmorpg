@@ -37,8 +37,12 @@ characterRouter.get("/me", async (req: AuthedRequest, res) => {
 characterRouter.post("/", async (req: AuthedRequest, res) => {
   const { name, appearance } = req.body ?? {};
 
-  if (!isValidName(name) || !isValidAppearance(appearance)) {
-    res.status(400).json({ error: "invalid name or appearance" });
+  if (!isValidName(name)) {
+    res.status(400).json({ error: "Namnet måste vara 2-20 tecken." });
+    return;
+  }
+  if (!isValidAppearance(appearance)) {
+    res.status(400).json({ error: "Ogiltigt utseende." });
     return;
   }
 
