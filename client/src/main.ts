@@ -7,9 +7,19 @@ import { savePosition } from "./net/api";
 const canvas = document.getElementById("game") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
 
+let viewWidth = 0;
+let viewHeight = 0;
+
 function resize(): void {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  viewWidth = window.innerWidth;
+  viewHeight = window.innerHeight;
+
+  canvas.style.width = `${viewWidth}px`;
+  canvas.style.height = `${viewHeight}px`;
+  canvas.width = Math.round(viewWidth * dpr);
+  canvas.height = Math.round(viewHeight * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 window.addEventListener("resize", resize);
 resize();
@@ -47,9 +57,9 @@ async function main(): Promise<void> {
       dirtySinceLastSave = true;
     }
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawGround(ctx, canvas.width, canvas.height, player.x, player.y);
-    drawCharacter(ctx, canvas.width / 2, canvas.height / 2, player.facing, character.appearance);
+    ctx.clearRect(0, 0, viewWidth, viewHeight);
+    drawGround(ctx, viewWidth, viewHeight, player.x, player.y);
+    drawCharacter(ctx, viewWidth / 2, viewHeight / 2, player.facing, character.appearance);
 
     requestAnimationFrame(tick);
   }
