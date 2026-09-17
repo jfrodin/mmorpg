@@ -15,23 +15,30 @@ export function drawCharacter(
   ctx.ellipse(0, 14, 12, 5, 0, 0, Math.PI * 2);
   ctx.fill();
 
+  ctx.strokeStyle = "rgba(20, 18, 16, 0.35)";
+  ctx.lineWidth = 1.5;
+
   ctx.fillStyle = appearance.pantsColor;
   ctx.fillRect(-7, 2, 14, 12);
+  ctx.strokeRect(-7, 2, 14, 12);
 
   ctx.fillStyle = appearance.jacketColor;
   ctx.beginPath();
   ctx.roundRect(-10, -14, 20, 20, 6);
   ctx.fill();
+  ctx.stroke();
 
   ctx.fillStyle = appearance.skinColor;
   ctx.beginPath();
   ctx.arc(0, -20, 8, 0, Math.PI * 2);
   ctx.fill();
+  ctx.stroke();
 
   ctx.fillStyle = appearance.hairColor;
   ctx.beginPath();
   ctx.arc(0, -23, 8, Math.PI, Math.PI * 2);
   ctx.fill();
+  ctx.stroke();
 
   if (facing.x !== 0 || facing.y !== 0) {
     ctx.fillStyle = "rgba(255, 255, 255, 0.6)";

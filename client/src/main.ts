@@ -3,7 +3,7 @@ import { RESOURCE_NODES, INTERACT_RANGE, ISLAND_LIGHT_POSITION, isIslandLightAct
 import { getMoveVector } from "./input/Keyboard";
 import { drawWorld } from "./render/World";
 import { drawResourceNode } from "./render/ResourceNode";
-import { drawDayNightOverlay, drawFogOverlay, getDarkness } from "./render/DayNight";
+import { drawDayNightOverlay, drawFogOverlay, drawVignette, getDarkness } from "./render/DayNight";
 import { drawIslandLight } from "./render/Mystery";
 import { isWalkableWorld } from "./world/tilemap";
 import { drawCharacter, drawNameTag, drawInteractPrompt } from "./appearance/Character";
@@ -12,6 +12,7 @@ import { runAuthFlow } from "./ui/AuthOverlay";
 import { initChat } from "./ui/Chat";
 import { showDialog } from "./ui/Dialog";
 import { initInventoryPanel, applyHarvestResult } from "./ui/Inventory";
+import { initTimeIndicator, updateTimeIndicator } from "./ui/TimeIndicator";
 import { savePosition, getInventory } from "./net/api";
 import { connectSocket } from "./net/socket";
 import { NPCS } from "./world/npcs";
@@ -51,6 +52,7 @@ async function main(): Promise<void> {
 
   const inventory = await getInventory().catch(() => ({ items: [], skills: [] }));
   initInventoryPanel(inventory);
+  initTimeIndicator();
 
   const player = {
     x: character.x,
@@ -91,7 +93,7 @@ async function main(): Promise<void> {
   socket.on("node_respawned", ({ nodeId }) => depletedNodes.delete(nodeId));
 
   let dayStartedAt = Date.now();
-  let dayLengthMs = 20 * 60 * 1000;
+  let dayLengthMs = 8 * 60 * 1000;
   let weather: Weather = "clear";
   socket.on("world_snapshot", (snapshot) => {
     dayStartedAt = snapshot.dayStartedAt;
@@ -167,8 +169,12 @@ async function main(): Promise<void> {
       }
     }
 
+    const timeOfDay = ((Date.now() - dayStartedAt) % dayLengthMs) / dayLengthMs;
+    const darkness = getDarkness(timeOfDay);
+    updateTimeIndicator(darkness, weather);
+
     ctx.clearRect(0, 0, viewWidth, viewHeight);
-    drawWorld(ctx, viewWidth, viewHeight, player.x, player.y);
+    drawWorld(ctx, viewWidth, viewHeight, player.x, player.y, now / 1000, darkness);
 
     let nearestDist = Infinity;
     nearest = null;
@@ -240,9 +246,8 @@ async function main(): Promise<void> {
     if (weather === "fog") {
       drawFogOverlay(ctx, viewWidth, viewHeight);
     }
-    const timeOfDay = ((Date.now() - dayStartedAt) % dayLengthMs) / dayLengthMs;
-    const darkness = getDarkness(timeOfDay);
     drawDayNightOverlay(ctx, viewWidth, viewHeight, timeOfDay);
+    drawVignette(ctx, viewWidth, viewHeight);
 
     if (isIslandLightActive(dayStartedAt, dayLengthMs, weather, darkness)) {
       const lightScreenX = viewWidth / 2 + (ISLAND_LIGHT_POSITION.x - player.x);

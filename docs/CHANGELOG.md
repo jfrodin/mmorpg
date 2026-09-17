@@ -1,5 +1,17 @@
 # CHANGELOG.md
 
+## 2026-09-17 (visuell polish + dygnscykel-fix)
+
+- PO-feedback: dygnscykeln syntes knappt (20 min är för långsamt att märka under en normal session, och effekten var för svag) och saknade en tydlig indikator. Fixat:
+  - Dygnslängd sänkt till 8 minuter.
+  - Mörker-overlayn kraftigare (max alpha 0.6→0.82) plus en ny varm skymnings-/gryningston som blandas in runt övergångarna, för en tydligare känsla av att dygnet faktiskt växlar.
+  - Ny UI-indikator uppe till vänster (🌙 Natt / 🌆 Skymning / ☀️ Dag + väder) — dygnscykeln är aldrig tvetydig även om man inte lägger märke till ljussättningen.
+- Allmän visuell polish av världen:
+  - Byggnader ritas nu strukturellt korrekt (kollar grannrutor): gavelspetsigt tak bara på översta raden, dörr på nedersta raden, enstaka fönster på väggarna som lyser varmt på natten — istället för en rand upprepad på varje rad.
+  - Gräs/skogsmark har nu små grässtrån-detaljer, kullersten har små stenprickar, vatten har en svag tidsbaserad glittring.
+  - Vinjettering (mörkare kanter) för ett mer fokuserat, atmosfäriskt intryck.
+  - Karaktärer har nu en tunn konturlinje för tydligare siluett (§7-kravet).
+
 ## 2026-09-16 (världsutbyggnad efter v0.1)
 
 - Kartan utökad österut (120→170 rutor bred): vägen från torget fortsätter till en liten lantlig korsning med en gård (bostadshus + lada) och en ny NPC, Ingvar (lantbrukare) — matchar "landsbygd/gårdar" i den godkända geografin (§8), inget nytt PO-beslut krävt eftersom det bara fyller i redan godkänt konceptutrymme.

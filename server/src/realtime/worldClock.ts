@@ -1,7 +1,7 @@
 import type { Server } from "socket.io";
 import type { ClientToServerEvents, ServerToClientEvents, Weather } from "shared";
 
-export const DAY_LENGTH_MS = 20 * 60 * 1000;
+export const DAY_LENGTH_MS = 8 * 60 * 1000;
 
 const dayStartedAt = Date.now();
 let currentWeather: Weather = "clear";
