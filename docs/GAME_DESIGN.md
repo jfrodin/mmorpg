@@ -23,6 +23,8 @@ Exploration, Fishing, Foraging, Hunting, Survival, Crafting, Cooking, Trading, I
 
 **v0.1 implementerar endast: Foraging** (plocka bär/svamp/växter i skogen). Övriga skills läggs till i senare versioner.
 
+"Foraging" används som intern nyckel i kod/databas (matchar speccens ursprungliga skill-lista), men allt spelaren faktiskt ser är svenskt — visningsnamnet är **"Insamling"** (`shared/src/skills.ts`, `SKILL_DEFINITIONS`). Samma mönster ska följas för framtida skills: engelsk kod-nyckel är okej, men UI-text ska alltid vara svensk.
+
 Foraging är fullt server-auktoritativt: resursnoder (`shared/src/resources.ts`) har fast position, item-typ och respawn-tid; klienten kan bara begära skörd via `harvest`-eventet, servern validerar avstånd och cooldown, uppdaterar inventory/xp i databasen och broadcastar nodens depleted/respawned-state till alla anslutna. Nivå visas som `xp / 25 + 1` (rent kosmetisk formel, kan justeras fritt utan protokolländring).
 
 ## Exploration-filosofi

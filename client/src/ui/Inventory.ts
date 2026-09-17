@@ -1,4 +1,4 @@
-import { ITEM_DEFINITIONS } from "shared";
+import { ITEM_DEFINITIONS, SKILL_DEFINITIONS } from "shared";
 import type { InventorySummary } from "../net/api";
 
 const ITEM_COLORS: Record<string, string> = {
@@ -51,7 +51,8 @@ function render(): void {
   const foragingXp = skills.get("foraging") ?? 0;
   const skillLine = document.createElement("div");
   skillLine.className = "inventory-skill";
-  skillLine.textContent = `Foraging — nivå ${levelForXp(foragingXp)} (${foragingXp} xp)`;
+  const skillName = SKILL_DEFINITIONS.foraging?.name ?? "Insamling";
+  skillLine.textContent = `${skillName} — nivå ${levelForXp(foragingXp)} (${foragingXp} xp)`;
   panel.appendChild(skillLine);
 }
 

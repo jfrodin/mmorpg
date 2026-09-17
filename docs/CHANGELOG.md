@@ -1,5 +1,10 @@
 # CHANGELOG.md
 
+## 2026-09-17 (svenska UI-texter)
+
+- PO-feedback: "Foraging" i väske-panelen är inte svenskt. Bytt till "Insamling" som visningsnamn (`shared/src/skills.ts`, `SKILL_DEFINITIONS`), engelsk nyckel `foraging` kvar internt i kod/databas.
+- Ny stående regel i CONTENT_GUIDE.md: allt spelaren ser ska vara svenskt, engelska bara tillåtet i kod/interna nycklar.
+
 ## 2026-09-17 (husjustering: lägre, mindre, bredare dörr)
 
 - PO-feedback: husen såg konstiga ut (för höga, för stora, dörren för smal). Fixat:

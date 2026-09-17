@@ -4,6 +4,10 @@
 
 Svensk/nordisk vardag. Trovärdigt, igenkännbart, lätt underdrivet — inte dramatiskt eller högtravande. Humor får finnas, men torr/vardaglig, inte parodisk.
 
+## Språk
+
+All text spelaren faktiskt ser (UI, dialog, felmeddelanden, knapptexter, skill-/föremålsnamn) ska vara på svenska — inga engelska kvarlevor från design-/spec-terminologi (t.ex. fick skillen "Foraging" internt engelskt kod-namn men visas som "Insamling" i UI, se GAME_DESIGN.md). Engelska är okej i kod, variabelnamn och interna nycklar, aldrig i det spelaren läser.
+
 ## Namnkonventioner
 
 - Ortnamn: sammansatta, plausibla svenska mönster (kvarn-, björn-, tjärn-, -vik, -sund, -fors, -åsen, -by). Kopiera aldrig verkliga specifika ortnamn i Jämtland/Östersund rakt av.
