@@ -69,14 +69,16 @@ export function drawNameTag(
 export function drawInteractPrompt(
   ctx: CanvasRenderingContext2D,
   screenX: number,
-  screenY: number
+  screenY: number,
+  label: string = "Prata"
 ): void {
   ctx.save();
   ctx.font = "11px system-ui, sans-serif";
   ctx.textAlign = "center";
+  const text = `[E] ${label}`;
   ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-  ctx.fillText("[E] Prata", screenX + 1, screenY - 47);
+  ctx.fillText(text, screenX + 1, screenY - 47);
   ctx.fillStyle = "#e8c96a";
-  ctx.fillText("[E] Prata", screenX, screenY - 48);
+  ctx.fillText(text, screenX, screenY - 48);
   ctx.restore();
 }

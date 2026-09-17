@@ -216,7 +216,7 @@ async function main(): Promise<void> {
       const depleted = depletedNodes.has(node.id);
       drawResourceNode(ctx, screenX, screenY, node.itemId, depleted);
       if (nearest?.type === "node" && nearest.id === node.id) {
-        drawInteractPrompt(ctx, screenX, screenY - 6);
+        drawInteractPrompt(ctx, screenX, screenY - 6, "Plocka");
       }
     }
 
