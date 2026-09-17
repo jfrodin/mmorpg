@@ -106,16 +106,19 @@ export function drawBuilding(
     ctx.strokeRect(wx, windowY, windowSize, windowSize);
   }
 
-  // Door, centered.
-  const doorWidth = Math.min(widthPx * 0.2, 16);
-  const doorHeight = wallHeight * 0.48;
+  // Door, centered, resting on the ground.
+  const doorWidth = Math.min(widthPx * 0.18, 15);
+  const doorHeight = Math.min(wallHeight * 0.32, 28);
   const doorX = apexX - doorWidth / 2;
   const doorY = screenY + heightPx - doorHeight;
-  ctx.fillStyle = shade(building.trimColor, -140);
+  ctx.fillStyle = "#3a2418";
   ctx.fillRect(doorX, doorY, doorWidth, doorHeight);
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(doorX + 2, doorY + 3, doorWidth - 4, doorHeight - 6);
   ctx.fillStyle = "rgba(230, 200, 120, 0.9)";
   ctx.beginPath();
-  ctx.arc(doorX + doorWidth - 3, doorY + doorHeight / 2, 1.4, 0, Math.PI * 2);
+  ctx.arc(doorX + doorWidth - 3, doorY + doorHeight / 2, 1.3, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.restore();
