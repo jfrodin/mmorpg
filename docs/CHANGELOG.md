@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2026-09-17 (husjustering: lägre, mindre, bredare dörr)
+
+- PO-feedback: husen såg konstiga ut (för höga, för stora, dörren för smal). Fixat:
+  - Byggnadernas visuella höjd är nu frikopplad från tomtens djup (`heightTiles`) och förankrad i marklinjen — ett djupt hus-fotavtryck (för kollisionen) ritas inte längre som ett lika högt torn, utan som en låg stuga med tak-höjd konstant oavsett tomtstorlek.
+  - Alla sju husens tomter krympta ~15-20%.
+  - Dörren breddad (0.18→0.3 av väggbredden, upp till 22px).
+
 ## 2026-09-17 (hus-grafik + UI-synlighet)
 
 - PO-feedback: byggnaderna såg mekaniska ut (samma rand upprepad per tile-rad) och inventory-panelen var för diskret för att märkas.

@@ -22,9 +22,17 @@ export function drawBuilding(
   heightPx: number,
   darkness: number
 ): void {
-  const roofHeight = Math.min(heightPx * 0.4, 46);
-  const wallTop = screenY + roofHeight;
-  const wallHeight = heightPx - roofHeight;
+  // The footprint (widthPx x heightPx) is the collision area on the
+  // ground, but rendering it as a literally-that-tall structure made
+  // deep buildings look like towers. Anchor the drawing to the front
+  // (bottom) of the footprint and cap how tall it's actually drawn, so
+  // buildings stay low, squat cottages regardless of footprint depth.
+  const groundY = screenY + heightPx;
+  const visualHeight = Math.min(heightPx, 92);
+  const roofHeight = Math.min(visualHeight * 0.34, 28);
+  const wallHeight = visualHeight - roofHeight;
+  const wallTop = groundY - visualHeight + roofHeight;
+  const roofApexY = groundY - visualHeight;
   const overhang = 6;
   const seed = hash(building.x, building.y);
 
@@ -33,15 +41,7 @@ export function drawBuilding(
   // Ground shadow.
   ctx.fillStyle = "rgba(0, 0, 0, 0.22)";
   ctx.beginPath();
-  ctx.ellipse(
-    screenX + widthPx / 2,
-    screenY + heightPx + 6,
-    widthPx / 2 + 4,
-    8,
-    0,
-    0,
-    Math.PI * 2
-  );
+  ctx.ellipse(screenX + widthPx / 2, groundY + 6, widthPx / 2 + 4, 8, 0, 0, Math.PI * 2);
   ctx.fill();
 
   // Walls, with a faint plank-line texture.
@@ -49,7 +49,7 @@ export function drawBuilding(
   ctx.fillRect(screenX, wallTop, widthPx, wallHeight);
   ctx.strokeStyle = "rgba(0, 0, 0, 0.12)";
   ctx.lineWidth = 1;
-  for (let ly = wallTop + 8; ly < screenY + heightPx; ly += 8) {
+  for (let ly = wallTop + 8; ly < groundY; ly += 8) {
     ctx.beginPath();
     ctx.moveTo(screenX, ly);
     ctx.lineTo(screenX + widthPx, ly);
@@ -66,14 +66,14 @@ export function drawBuilding(
   ctx.fillStyle = shade(building.roofColor, -10);
   ctx.beginPath();
   ctx.moveTo(screenX - overhang, wallTop + 2);
-  ctx.lineTo(apexX, screenY);
+  ctx.lineTo(apexX, roofApexY);
   ctx.lineTo(apexX, wallTop + 2);
   ctx.closePath();
   ctx.fill();
 
   ctx.fillStyle = shade(building.roofColor, 8);
   ctx.beginPath();
-  ctx.moveTo(apexX, screenY);
+  ctx.moveTo(apexX, roofApexY);
   ctx.lineTo(screenX + widthPx + overhang, wallTop + 2);
   ctx.lineTo(apexX, wallTop + 2);
   ctx.closePath();
@@ -82,7 +82,7 @@ export function drawBuilding(
   ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(apexX, screenY);
+  ctx.moveTo(apexX, roofApexY);
   ctx.lineTo(apexX, wallTop + 2);
   ctx.stroke();
 
@@ -90,7 +90,7 @@ export function drawBuilding(
   if (seed > 0.4) {
     const chimneyX = screenX + widthPx * (seed > 0.7 ? 0.72 : 0.28);
     ctx.fillStyle = shade(building.wallColor, -25);
-    ctx.fillRect(chimneyX - 4, screenY - 10, 9, roofHeight * 0.55 + 12);
+    ctx.fillRect(chimneyX - 4, roofApexY - 8, 9, roofHeight * 0.55 + 12);
   }
 
   // Windows, symmetric either side of the door.
@@ -107,10 +107,10 @@ export function drawBuilding(
   }
 
   // Door, centered, resting on the ground.
-  const doorWidth = Math.min(widthPx * 0.18, 15);
-  const doorHeight = Math.min(wallHeight * 0.32, 28);
+  const doorWidth = Math.min(widthPx * 0.3, 22);
+  const doorHeight = Math.min(wallHeight * 0.34, 26);
   const doorX = apexX - doorWidth / 2;
-  const doorY = screenY + heightPx - doorHeight;
+  const doorY = groundY - doorHeight;
   ctx.fillStyle = "#3a2418";
   ctx.fillRect(doorX, doorY, doorWidth, doorHeight);
   ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
