@@ -1,6 +1,8 @@
 import type { TileType } from "../world/types";
 import { TILE_SIZE } from "../world/types";
 import { getTile } from "../world/tilemap";
+import { BUILDINGS } from "../world/buildings";
+import { drawBuilding } from "./Building";
 
 function hash(x: number, y: number): number {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
@@ -14,7 +16,7 @@ const BASE_COLOR: Record<TileType, [number, number, number]> = {
   path: [122, 98, 68],
   sand: [198, 180, 136],
   water: [42, 82, 120],
-  building: [140, 68, 56],
+  building: [70, 60, 48],
   tree: [42, 64, 40],
 };
 
@@ -63,8 +65,6 @@ export function drawWorld(
         drawGrassDetail(ctx, screenX, screenY, tileX, tileY, tile === "forest_floor");
       } else if (tile === "cobble") {
         drawCobbleDetail(ctx, screenX, screenY, tileX, tileY);
-      } else if (tile === "building") {
-        drawBuildingTile(ctx, screenX, screenY, tileX, tileY, n, darkness);
       }
 
       if (tile === "tree") {
@@ -75,6 +75,22 @@ export function drawWorld(
 
   for (const tree of trees) {
     drawTree(ctx, tree.screenX, tree.screenY, tree.n);
+  }
+
+  for (const building of BUILDINGS) {
+    const widthPx = building.widthTiles * TILE_SIZE;
+    const heightPx = building.heightTiles * TILE_SIZE;
+    const screenX = building.x - cameraX + width / 2;
+    const screenY = building.y - cameraY + height / 2;
+    if (
+      screenX + widthPx < -60 ||
+      screenX > width + 60 ||
+      screenY + heightPx < -60 ||
+      screenY > height + 60
+    ) {
+      continue;
+    }
+    drawBuilding(ctx, building, screenX, screenY, widthPx, heightPx, darkness);
   }
 }
 
@@ -118,45 +134,6 @@ function drawCobbleDetail(
     ctx.arc(cx, cy, 3, 0, Math.PI * 2);
     ctx.fill();
   }
-  ctx.restore();
-}
-
-function drawBuildingTile(
-  ctx: CanvasRenderingContext2D,
-  screenX: number,
-  screenY: number,
-  tileX: number,
-  tileY: number,
-  n: number,
-  darkness: number
-): void {
-  const isTopEdge = getTile(tileX, tileY - 1) !== "building";
-  const isBottomEdge = getTile(tileX, tileY + 1) !== "building";
-  const isLeftEdge = getTile(tileX - 1, tileY) !== "building";
-  const isRightEdge = getTile(tileX + 1, tileY) !== "building";
-
-  ctx.save();
-
-  if (isTopEdge) {
-    ctx.fillStyle = `rgb(${(70 + n * 20) | 0}, ${(48 + n * 12) | 0}, ${(40 + n * 10) | 0})`;
-    ctx.beginPath();
-    ctx.moveTo(screenX - 2, screenY + 10);
-    ctx.lineTo(screenX + TILE_SIZE / 2, screenY - 10);
-    ctx.lineTo(screenX + TILE_SIZE + 2, screenY + 10);
-    ctx.closePath();
-    ctx.fill();
-  } else if (isBottomEdge && !isLeftEdge && !isRightEdge) {
-    ctx.fillStyle = "rgba(30, 18, 14, 0.6)";
-    ctx.fillRect(screenX + TILE_SIZE * 0.32, screenY + TILE_SIZE * 0.3, TILE_SIZE * 0.36, TILE_SIZE * 0.7);
-  } else if (!isTopEdge && !isBottomEdge && hash(tileX * 3, tileY * 3) < 0.4) {
-    const lit = darkness > 0.4;
-    ctx.fillStyle = lit ? "rgba(255, 214, 130, 0.85)" : "rgba(220, 230, 235, 0.55)";
-    ctx.fillRect(screenX + TILE_SIZE * 0.28, screenY + TILE_SIZE * 0.28, TILE_SIZE * 0.44, TILE_SIZE * 0.34);
-    ctx.strokeStyle = "rgba(30, 20, 15, 0.5)";
-    ctx.lineWidth = 1;
-    ctx.strokeRect(screenX + TILE_SIZE * 0.28, screenY + TILE_SIZE * 0.28, TILE_SIZE * 0.44, TILE_SIZE * 0.34);
-  }
-
   ctx.restore();
 }
 

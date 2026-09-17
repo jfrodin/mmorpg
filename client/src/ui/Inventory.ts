@@ -21,7 +21,7 @@ function render(): void {
 
   const title = document.createElement("div");
   title.className = "inventory-title";
-  title.textContent = "Väska";
+  title.textContent = "🎒 Väska";
   panel.appendChild(title);
 
   if (items.size === 0) {

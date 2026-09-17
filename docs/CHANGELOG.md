@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2026-09-17 (hus-grafik + UI-synlighet)
+
+- PO-feedback: byggnaderna såg mekaniska ut (samma rand upprepad per tile-rad) och inventory-panelen var för diskret för att märkas.
+- Byggnader ritas om helt: från per-tile-rendering till sammanhängande husillustrationer (`client/src/world/buildings.ts` + `client/src/render/Building.ts`) — gavelspetsigt tak i två nyanser (pseudo-3D), vita knutar, symmetriska fönster som lyser varmt på natten, centrerad dörr med handtag, skorsten, och markskugga. Sju hus i nordisk träpalett (falurött, ockragult, vitt med mörka knutar).
+- Tile-kollisionen (`building`-typen i starting-area.ts) är oförändrad — bara hur den ritas visuellt har bytts ut.
+- Väske-panelen (uppe till höger) gjord mer synlig: ram, starkare bakgrund, skugga, ryggsäcksikon i rubriken. Den är passiv (alltid synlig, ingen "öppna"-knapp), vilket klargjordes för PO.
+
 ## 2026-09-17 (visuell polish + dygnscykel-fix)
 
 - PO-feedback: dygnscykeln syntes knappt (20 min är för långsamt att märka under en normal session, och effekten var för svag) och saknade en tydlig indikator. Fixat:
