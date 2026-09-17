@@ -1,6 +1,8 @@
 import type { RegionDefinition } from "./types";
 
-// PROPOSAL geography (Ö-staden), see docs/WORLD.md. Place names are
+// CANON geography (Ö-staden, docs/WORLD.md): the town sits on a small
+// peninsula, water wrapping it on the south and east, with a bridge
+// carrying the one road out to the rest of the map. Place names are
 // deliberately unresolved (docs/WORLD.md) — this file only encodes shape.
 export const startingArea: RegionDefinition = {
   id: "starting-area",
@@ -16,6 +18,13 @@ export const startingArea: RegionDefinition = {
       data: { type: "tree", x0: 0, y0: 0, x1: 30, y1: 90, density: 0.16, seed: 7 },
     },
 
+    // A couple of foot trails wandering a short way into the forest.
+    { kind: "fill", data: { type: "path", x0: 24, y0: 46, x1: 30, y1: 49 } },
+    { kind: "fill", data: { type: "path", x0: 14, y0: 44, x1: 25, y1: 47 } },
+    { kind: "fill", data: { type: "path", x0: 6, y0: 40, x1: 15, y1: 45 } },
+    { kind: "fill", data: { type: "path", x0: 24, y0: 19, x1: 30, y1: 22 } },
+    { kind: "fill", data: { type: "path", x0: 13, y0: 15, x1: 25, y1: 20 } },
+
     // Town square.
     { kind: "fill", data: { type: "cobble", x0: 34, y0: 34, x1: 58, y1: 52 } },
 
@@ -30,6 +39,11 @@ export const startingArea: RegionDefinition = {
     { kind: "fill", data: { type: "path", x0: 58, y0: 46, x1: 170, y1: 50 } },
     { kind: "fill", data: { type: "path", x0: 148, y0: 20, x1: 152, y1: 90 } },
 
+    // Lake arm separating the peninsula from the mainland to the east —
+    // the road crosses it on a bridge, per the approved geography.
+    { kind: "fill", data: { type: "water", x0: 75, y0: 15, x1: 110, y1: 95 } },
+    { kind: "fill", data: { type: "bridge", x0: 75, y0: 46, x1: 110, y1: 50 } },
+
     // A farm at the crossroads — one of the "landsbygd/gårdar" landmarks
     // from the approved geography concept, not yet named (see WORLD.md).
     { kind: "fill", data: { type: "building", x0: 139, y0: 37, x1: 145, y1: 43 } },
@@ -43,9 +57,12 @@ export const startingArea: RegionDefinition = {
       data: { type: "tree", x0: 153, y0: 15, x1: 170, y1: 30, density: 0.1, seed: 42 },
     },
 
-    // Lake shore, south.
-    { kind: "fill", data: { type: "sand", x0: 15, y0: 60, x1: 95, y1: 68 } },
-    { kind: "fill", data: { type: "water", x0: 10, y0: 68, x1: 100, y1: 110 } },
+    // Lake shore, south of the peninsula.
+    { kind: "fill", data: { type: "sand", x0: 18, y0: 60, x1: 88, y1: 68 } },
+    { kind: "fill", data: { type: "water", x0: 14, y0: 68, x1: 92, y1: 104 } },
+
+    // A small jetty reaching out from the shore near the fisherman.
+    { kind: "fill", data: { type: "bridge", x0: 48, y0: 65, x1: 52, y1: 76 } },
 
     // A small island out on the lake — no bridge, unreachable on foot by
     // design (see docs/WORLD.md mystery concept: observed, not visited).

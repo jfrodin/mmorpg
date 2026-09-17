@@ -8,7 +8,8 @@ export type TileType =
   | "sand"
   | "water"
   | "building"
-  | "tree";
+  | "tree"
+  | "bridge";
 
 export const WALKABLE: Record<TileType, boolean> = {
   grass: true,
@@ -19,6 +20,7 @@ export const WALKABLE: Record<TileType, boolean> = {
   water: false,
   building: false,
   tree: false,
+  bridge: true,
 };
 
 export interface RegionFill {

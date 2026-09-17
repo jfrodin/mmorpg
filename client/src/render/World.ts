@@ -3,6 +3,8 @@ import { TILE_SIZE } from "../world/types";
 import { getTile } from "../world/tilemap";
 import { BUILDINGS } from "../world/buildings";
 import { drawBuilding } from "./Building";
+import { DECORATIONS } from "../world/decorations";
+import { drawDecoration } from "./Decoration";
 
 function hash(x: number, y: number): number {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
@@ -18,6 +20,7 @@ const BASE_COLOR: Record<TileType, [number, number, number]> = {
   water: [42, 82, 120],
   building: [70, 60, 48],
   tree: [42, 64, 40],
+  bridge: [138, 104, 68],
 };
 
 interface TreeDecoration {
@@ -65,6 +68,8 @@ export function drawWorld(
         drawGrassDetail(ctx, screenX, screenY, tileX, tileY, tile === "forest_floor");
       } else if (tile === "cobble") {
         drawCobbleDetail(ctx, screenX, screenY, tileX, tileY);
+      } else if (tile === "bridge") {
+        drawBridgeDetail(ctx, screenX, screenY, tileX, tileY);
       }
 
       if (tile === "tree") {
@@ -91,6 +96,15 @@ export function drawWorld(
       continue;
     }
     drawBuilding(ctx, building, screenX, screenY, widthPx, heightPx, darkness);
+  }
+
+  for (const decoration of DECORATIONS) {
+    const screenX = decoration.x - cameraX + width / 2;
+    const screenY = decoration.y - cameraY + height / 2;
+    if (screenX < -40 || screenX > width + 40 || screenY < -40 || screenY > height + 40) {
+      continue;
+    }
+    drawDecoration(ctx, decoration, screenX, screenY, darkness);
   }
 }
 
@@ -133,6 +147,39 @@ function drawCobbleDetail(
     ctx.beginPath();
     ctx.arc(cx, cy, 3, 0, Math.PI * 2);
     ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawBridgeDetail(
+  ctx: CanvasRenderingContext2D,
+  screenX: number,
+  screenY: number,
+  tileX: number,
+  tileY: number
+): void {
+  ctx.save();
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
+  ctx.lineWidth = 1;
+  for (let ly = screenY + 8; ly < screenY + TILE_SIZE; ly += 8) {
+    ctx.beginPath();
+    ctx.moveTo(screenX, ly);
+    ctx.lineTo(screenX + TILE_SIZE, ly);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "#5a4a34";
+  if (getTile(tileX - 1, tileY) === "water") {
+    ctx.fillRect(screenX, screenY, 4, TILE_SIZE);
+  }
+  if (getTile(tileX + 1, tileY) === "water") {
+    ctx.fillRect(screenX + TILE_SIZE - 4, screenY, 4, TILE_SIZE);
+  }
+  if (getTile(tileX, tileY - 1) === "water") {
+    ctx.fillRect(screenX, screenY, TILE_SIZE, 4);
+  }
+  if (getTile(tileX, tileY + 1) === "water") {
+    ctx.fillRect(screenX, screenY + TILE_SIZE - 4, TILE_SIZE, 4);
   }
   ctx.restore();
 }

@@ -1,5 +1,15 @@
 # CHANGELOG.md
 
+## 2026-09-17 (halvö + bro, torg-möbler, skogsstigar)
+
+- PO påpekade att staden aldrig faktiskt byggdes på halvön/ön som vi kom överens om — v0.1-kartan hade bara sjö söderut, ingen bro. Fixat på riktigt nu:
+  - Ny sjöarm öster om torget, vägen österut korsar den på en riktig bro (ny `bridge`-tiletyp: brädtextur + räcke mot vattnet, walkable). Sjön omsluter nu torg/skog på syd- OCH östsidan — realiserar den godkända halvö-geografin istället för att vara en fotnot om vad som *inte* byggdes.
+  - Sjön söderut krympt något (y-djup 110→104, x-bredd trimmad) för att inte dominera lika mycket.
+  - En brygga vid fiskaren Rune, ut i vattnet.
+  - Torget möblerat: brunn, två lyktstolpar (lyser på natten), två bänkar.
+  - Två stigar in i skogen från torgets närområde, så skogen inte bara är en enhetlig grön yta.
+- Uppdaterat WORLD.md: halvön/bron är nu markerad som byggd, inte längre en känd lucka.
+
 ## 2026-09-17 (svenska UI-texter)
 
 - PO-feedback: "Foraging" i väske-panelen är inte svenskt. Bytt till "Insamling" som visningsnamn (`shared/src/skills.ts`, `SKILL_DEFINITIONS`), engelsk nyckel `foraging` kvar internt i kod/databas.
