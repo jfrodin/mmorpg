@@ -93,7 +93,7 @@ async function main(): Promise<void> {
   socket.on("node_respawned", ({ nodeId }) => depletedNodes.delete(nodeId));
 
   let dayStartedAt = Date.now();
-  let dayLengthMs = 8 * 60 * 1000;
+  let dayLengthMs = 30 * 60 * 1000;
   let weather: Weather = "clear";
   socket.on("world_snapshot", (snapshot) => {
     dayStartedAt = snapshot.dayStartedAt;
